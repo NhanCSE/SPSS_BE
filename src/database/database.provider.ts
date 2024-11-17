@@ -3,6 +3,8 @@ import { databaseConfig } from "./database.config";
 import { Sequelize } from "sequelize-typescript";
 import { Printer } from "src/modules/printer/entities/printer.entity";
 import { Location } from "src/modules/printer/entities/location.entity";
+import { FileInfo } from "src/modules/print-file/entities/fileInfo.entity";
+import { PrintingConfigure } from "src/modules/print-file/entities/printingconfigure.entity";
 
 
 export const databaseProviders = [
@@ -24,7 +26,7 @@ export const databaseProviders = [
           config = databaseConfig.development;
       }
       const sequelize = new Sequelize(config);
-      sequelize.addModels([Printer, Location]);
+      sequelize.addModels([Printer, Location, FileInfo, PrintingConfigure]);
       await sequelize.sync();
 
       try {
