@@ -1,6 +1,8 @@
 import { FileValidator } from '@nestjs/common';
 
-export class CustomFileTypeValidator extends FileValidator<{ fileType: string[] }> {
+export class CustomFileTypeValidator extends FileValidator<{
+  fileType: string[];
+}> {
   constructor(protected readonly validationOptions: { fileType: string[] }) {
     super(validationOptions);
   }

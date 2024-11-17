@@ -28,7 +28,7 @@ export async function findByCriteria<T extends Model>(
   model: ModelStatic<T>,
   addition: SearchAddition,
   includeType: AutoInclude | ManualInClude,
-  transaction: Transaction
+  transaction: Transaction,
 ): Promise<T[] | GroupedData<T> | any> {
   const conditions: any[] = [];
   let includeOptions;
@@ -52,23 +52,17 @@ export async function findByCriteria<T extends Model>(
       case '~':
         // conditions.push({ [formattedField]: { [Op.like]: `%${value}%` } });
         conditions.push(
-          Sequelize.where(
-            fn('LOWER', col(formattedField.replace(/\$/g, ''))),
-            {
-              [Op.like]: `%${value.toLowerCase()}%`
-            }
-          )
+          Sequelize.where(fn('LOWER', col(formattedField.replace(/\$/g, ''))), {
+            [Op.like]: `%${value.toLowerCase()}%`,
+          }),
         );
         break;
       case '!~':
         // conditions.push({ [formattedField]: { [Op.notLike]: `%${value}%` } });
         conditions.push(
-          Sequelize.where(
-            fn('LOWER', col(formattedField.replace(/\$/g, ''))),
-            {
-              [Op.notLike]: `%${value.toLowerCase()}%`
-            }
-          )
+          Sequelize.where(fn('LOWER', col(formattedField.replace(/\$/g, ''))), {
+            [Op.notLike]: `%${value.toLowerCase()}%`,
+          }),
         );
         break;
       case '=':
@@ -106,12 +100,11 @@ export async function findByCriteria<T extends Model>(
     include: includeOptions,
     where: {
       [Op.and]: conditions,
-    }
+    },
   };
-  if(transaction) {
+  if (transaction) {
     baseFindOptions.transaction = transaction;
   }
-  
 
   if (addition) {
     if (addition.sort) {
@@ -153,15 +146,15 @@ export async function findByCriteria<T extends Model>(
     where: {
       id: {
         [Op.in]: [...primaryKeyValues],
-      }
+      },
     },
     include: includeOptions,
-    subQuery: false
+    subQuery: false,
   };
-  if(transaction) {
+  if (transaction) {
     findOptions.transaction = transaction;
   }
-  
+
   const result = await model.findAll(findOptions);
 
   if (addition && addition.group) {
@@ -230,15 +223,17 @@ async function buildIncludeCriteria(
   dbSource: Sequelize,
 ) {
   const modelSet = new Set<string>();
-  const fields: string[] = additions.group ? [
-    ...criterias.map((criteria) => criteria.field),
-    ...additions.group,
-    ...additions.sort.map((sort) => sort[0]),
-  ] : [
-    ...criterias.map((criteria) => criteria.field),
-    ...additions.sort.map((sort) => sort[0]),
-  ];
-  
+  const fields: string[] = additions.group
+    ? [
+        ...criterias.map((criteria) => criteria.field),
+        ...additions.group,
+        ...additions.sort.map((sort) => sort[0]),
+      ]
+    : [
+        ...criterias.map((criteria) => criteria.field),
+        ...additions.sort.map((sort) => sort[0]),
+      ];
+
   const includeOptions: IncludeOptions[] = [];
   function addModel(field: string) {
     const relations: string[] = field.split('.');
@@ -269,4 +264,3 @@ async function buildIncludeCriteria(
   });
   return includeOptions;
 }
-

@@ -1,4 +1,11 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, UnauthorizedException, UnprocessableEntityException } from "@nestjs/common";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 
 @Catch(UnprocessableEntityException)
 export class UnprocessableEntityExceptionFilter implements ExceptionFilter {
@@ -10,7 +17,7 @@ export class UnprocessableEntityExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       success: false,
       message: exception.message,
-      data: null
+      data: null,
     });
   }
 }

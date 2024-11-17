@@ -1,4 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, NotFoundException } from "@nestjs/common";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Catch(NotFoundException)
 export class NotFoundExceptionFilter implements ExceptionFilter {
@@ -10,7 +16,7 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       success: false,
       message: exception.message,
-      data: null
+      data: null,
     });
   }
 }

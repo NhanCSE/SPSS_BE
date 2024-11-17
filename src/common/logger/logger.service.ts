@@ -6,7 +6,7 @@ export class LoggerService {
 
   private formatMessage(level: string, message: string): string {
     const now = new Date();
-    const hour = `${this.pad(now.getHours())}:${this.pad(now.getMinutes())}:${this.pad(now.getSeconds())}`
+    const hour = `${this.pad(now.getHours())}:${this.pad(now.getMinutes())}:${this.pad(now.getSeconds())}`;
     const day = `${this.pad(now.getDate())}/${this.pad(now.getMonth() + 1)}/${now.getFullYear()}`;
     const time = hour + ' ' + day;
     return `[${time}] [${level}] ${message}`;

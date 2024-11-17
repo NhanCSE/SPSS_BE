@@ -1,9 +1,9 @@
-import { DEVELOPMENT, PRODUCTION, SEQUELIZE, TEST } from "src/common/contants";
-import { databaseConfig } from "./database.config";
-import { Sequelize } from "sequelize-typescript";
-import { Printer } from "src/modules/printer/entities/printer.entity";
-import { Location } from "src/modules/printer/entities/location.entity";
-
+import { DEVELOPMENT, PRODUCTION, SEQUELIZE, TEST } from 'src/common/contants';
+import { databaseConfig } from './database.config';
+import { Sequelize } from 'sequelize-typescript';
+import { Printer } from 'src/modules/printer/entities/printer.entity';
+import { Location } from 'src/modules/printer/entities/location.entity';
+import { SystemConfiguration } from 'src/modules/system_configuration/system_configuration.entity';
 
 export const databaseProviders = [
   {
@@ -24,7 +24,7 @@ export const databaseProviders = [
           config = databaseConfig.development;
       }
       const sequelize = new Sequelize(config);
-      sequelize.addModels([Printer, Location]);
+      sequelize.addModels([Printer, Location, SystemConfiguration]);
       await sequelize.sync();
 
       try {
@@ -35,7 +35,6 @@ export const databaseProviders = [
       } catch (error) {
         console.error('Unable to connect to the database:', error);
       }
-      
       return sequelize;
     },
   },

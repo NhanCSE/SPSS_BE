@@ -1,4 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, ForbiddenException, HttpStatus } from "@nestjs/common";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  ForbiddenException,
+  HttpStatus,
+} from '@nestjs/common';
 
 @Catch(ForbiddenException)
 export class ForbiddenExceptionFilter implements ExceptionFilter {
@@ -9,8 +15,8 @@ export class ForbiddenExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       success: false,
-      message: "Người dùng không được phép truy cập tài nguyên này",
-      data: null
+      message: 'Người dùng không được phép truy cập tài nguyên này',
+      data: null,
     });
   }
 }

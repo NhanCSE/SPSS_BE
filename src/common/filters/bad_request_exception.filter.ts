@@ -1,4 +1,10 @@
-import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpStatus } from "@nestjs/common";
+import {
+  ArgumentsHost,
+  BadRequestException,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+} from '@nestjs/common';
 
 @Catch(BadRequestException)
 export class BadRequestExceptionFilter implements ExceptionFilter {
@@ -12,7 +18,7 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       success: false,
       message: exception.message,
-      data: null
+      data: null,
     });
   }
 }
