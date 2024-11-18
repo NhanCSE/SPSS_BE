@@ -1,4 +1,4 @@
-import { IsString, IsUUID, IsInt, IsDate, Min } from 'class-validator';
+import { IsString, IsUUID, IsInt, IsDate, Min, IsIn } from 'class-validator';
 import { UUID } from 'crypto';
 
 export class CreatePrintingHistoryDto {
@@ -21,4 +21,13 @@ export class CreatePrintingHistoryDto {
 
   @IsDate()
   date: Date;
+
+  @IsString()
+  @IsIn(['A4', 'A3', 'A5'], {
+    message: 'Paper size must be one of the following: A4, A3, A5',
+  })
+  paper_size: string;
+  
+  @IsString()
+  filenames: string;
 }
