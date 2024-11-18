@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrintFileService } from './print-file.service';
-import { PrintFileController } from './print-file.controller';
+import { FileService } from './file.service';
+import { PrintFileController } from './file.controller';
 import { LoggerModule } from "src/common/logger/logger.module";
 import { ResponseModule } from "../response/response.module";
 import { DatabaseModule } from "src/database/database.module";
-import { printFileProviders } from './print-file.provider';
+import { FileProviders } from './file.provider';
 
 @Module({
   imports: [
@@ -13,6 +13,6 @@ import { printFileProviders } from './print-file.provider';
     ResponseModule
   ],
   controllers: [PrintFileController],
-  providers: [...printFileProviders, PrintFileService],
+  providers: [...FileProviders, FileService],
 })
-export class PrintFileModule { }
+export class FileModule { }

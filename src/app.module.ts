@@ -3,11 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { PrinterModule } from './modules/printer/printer.module';
-import { PrintFileModule } from './modules/print-file/print-file.module';
+import { UserModule } from './modules/user/user.module';
+import { FileModule } from './modules/file/file.module';
+import { HistoryModule } from './modules/history/history.module';
 
 @Module({
-  imports: [DatabaseModule, PrinterModule, PrintFileModule],
+  imports: [DatabaseModule, PrinterModule, UserModule, FileModule, HistoryModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
