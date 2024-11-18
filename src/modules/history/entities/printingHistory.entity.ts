@@ -51,10 +51,14 @@ export class PrintingHistory extends Model<PrintingHistory> {
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  filenames: string
+  filename: string
 
   @AllowNull(false)
   @Column(DataType.DATE)
   date: Date;
+
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  page_size: string;
 
 }

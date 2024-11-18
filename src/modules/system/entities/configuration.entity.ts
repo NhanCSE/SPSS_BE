@@ -12,6 +12,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
 
 
@@ -19,25 +20,33 @@ import {
 export class SystemConfiguration extends Model<SystemConfiguration> {
 
   @PrimaryKey
-  @AllowNull(false)
+  @AutoIncrement
   @Column(DataType.INTEGER)
   versionID: Number;
 
-  @AllowNull(false)
+  @Default(() => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 1);
+    return date;
+  })
   @Column(DataType.DATE)
   historyClearTime: Date;
 
-  @AllowNull(false)
-  @Column(DataType.ARRAY(DataType.STRING))
-  allowedFile: string[];
+  @Default(['PDF'])
+  @Column(DataType.JSON)
+  allowFile: string[];
 
-  @AllowNull(false)
+  @Default(() => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 1);
+    return date;
+  })
   @Column(DataType.DATE)
   freePaperResetDate: Date;
 
-  @AllowNull(false)
+  @Default(0)
   @Column(DataType.INTEGER)
-  defaultFreePapers: Number;
+  defaultFreePaper: number;
 
 }
 

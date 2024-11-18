@@ -13,15 +13,15 @@ import {
     Unique,
     ForeignKey,
     BelongsTo,
+    AutoIncrement,
 } from 'sequelize-typescript';
 
 @Table
 export class User extends Model<User> {
     @PrimaryKey
-    @Default(UUIDV4)
-    @AllowNull(false)
-    @Column(DataType.UUID)
-    sso_id: UUID;
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    sso_id: number;
 
     @AllowNull(false)
     @Column(DataType.STRING)
@@ -42,4 +42,8 @@ export class User extends Model<User> {
     @AllowNull(false)
     @Column(DataType.STRING)
     phone: String;
+
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    role: string;
 }

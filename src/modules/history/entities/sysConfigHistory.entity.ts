@@ -28,8 +28,8 @@ export class SysConfigHistory extends Model<SysConfigHistory> {
 
   @AllowNull(false)
   @ForeignKey(() => Admin)
-  @Column(DataType.UUID)
-  SPSO_ID: UUID;
+  @Column(DataType.INTEGER)
+  spso_id: number;
 
   @BelongsTo(() => Admin)
   admin: Admin;
@@ -48,7 +48,7 @@ export class SysConfigHistory extends Model<SysConfigHistory> {
 
   @AllowNull(false)
   @ForeignKey(() => SystemConfiguration)
-  @Column(DataType.NUMBER)
+  @Column(DataType.INTEGER)
   version_id: number
 
   @BelongsTo(() => SystemConfiguration)
