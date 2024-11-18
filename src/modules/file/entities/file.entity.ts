@@ -47,8 +47,8 @@ export class File extends Model<File> {
 
   @AllowNull(false)
   @ForeignKey(() => Student)
-  @Column(DataType.UUID)
-  student_id: UUID;
+  @Column(DataType.INTEGER)
+  student_id: number;
 
   @BelongsTo(() => Student)
   student: Student;
