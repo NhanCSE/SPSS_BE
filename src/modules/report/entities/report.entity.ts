@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 3f6b5ee05da61fc6596ae17f03ededcb63b7c6e3
 import { UUID } from 'crypto';
 import { UUIDV4 } from 'sequelize';
 import {
@@ -31,29 +27,6 @@ export class GeneralPaperReport extends Model<GeneralPaperReport> {
   report_id: UUID;
 
   @AllowNull(false)
-<<<<<<< HEAD
-  @Column(DataType.STRING)
-  report_date: string;
-
-  @AllowNull(false)
-  @Column(DataType.STRING)
-  content: string;
-
-  @AllowNull(false)
-  @Column(DataType.DATE)
-  report_type: Date;
-
-  @AllowNull(false)
-  @ForeignKey(() => File)
-  @Column(DataType.UUID)
-  file_id: UUID;
-
-  @BelongsTo(() => File)
-  file: File;
-
-}
-
-=======
   @Column(DataType.DATE)
   report_date: Date;
 
@@ -124,4 +97,3 @@ export class PaymentReport extends Model<PaymentReport> {
 }
 
 
->>>>>>> 3f6b5ee05da61fc6596ae17f03ededcb63b7c6e3

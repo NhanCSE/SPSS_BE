@@ -42,11 +42,8 @@ export class User extends Model<User> {
     @AllowNull(false)
     @Column(DataType.STRING)
     phone: String;
-<<<<<<< HEAD
-=======
 
     @AllowNull(false)
     @Column(DataType.STRING)
     role: string;
->>>>>>> 3f6b5ee05da61fc6596ae17f03ededcb63b7c6e3
 }

@@ -26,7 +26,7 @@ export class CreatePrintingHistoryDto {
   @IsIn(['A4', 'A3', 'A5'], {
     message: 'Paper size must be one of the following: A4, A3, A5',
   })
-  paper_size: string;
+  page_size: string;
 
   @IsString()
   filenames: string;
