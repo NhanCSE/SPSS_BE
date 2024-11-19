@@ -1,7 +1,20 @@
+
 import { Module } from '@nestjs/common';
-import { PrintingHistoryModule } from './printing-history/printing-history.module';
+import { LoggerModule } from 'src/common/logger/logger.module';
+import { DatabaseModule } from 'src/database/database.module';
+import { ResponseModule } from 'src/modules/response/response.module';
+import { PrintingHistoryController } from './controllers/printingHistory.controller';
+import { PrintingHistoryService } from './services/printingHistory.service';
+
+
 
 @Module({
-  imports: [PrintingHistoryModule]
+  imports: [
+    DatabaseModule,
+    LoggerModule,
+    ResponseModule
+  ],
+  controllers: [PrintingHistoryController],
+  providers: [PrintingHistoryService],
 })
-export class HistoryModule {}
+export class PrintingHistoryModule { }

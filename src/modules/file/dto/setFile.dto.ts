@@ -15,7 +15,7 @@ export class SetFileDto {
     size: number;
 
     @IsUUID()
-    student_id: UUID;
+    student_id: number;
 }
 // export class SetFileDto {
 //     @IsUUID()

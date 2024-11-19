@@ -20,11 +20,10 @@ import { User } from './user.entity';
 export class Student extends Model<Student> {
 
     @PrimaryKey
-    @Default(UUIDV4)
     @AllowNull(false)
     @ForeignKey(() => User)
-    @Column(DataType.UUID)
-    sso_id: UUID;
+    @Column(DataType.INTEGER)
+    sso_id: number;
 
     @AllowNull(false)
     @Column(DataType.INTEGER)

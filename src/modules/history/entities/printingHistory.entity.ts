@@ -26,8 +26,8 @@ export class PrintingHistory extends Model<PrintingHistory> {
   printing_id: UUID;
 
   @AllowNull(false)
-  @Column(DataType.UUID)
-  student_id: UUID;
+  @Column(DataType.INTEGER)
+  student_id: number;
 
   @AllowNull(false)
   @ForeignKey(() => Printer)
@@ -56,5 +56,9 @@ export class PrintingHistory extends Model<PrintingHistory> {
   @AllowNull(false)
   @Column(DataType.DATE)
   date: Date;
+
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  page_size: string;
 
 }

@@ -1,3 +1,4 @@
+
 import { UUID } from 'crypto';
 import { UUIDV4 } from 'sequelize';
 import {
@@ -14,36 +15,18 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Student } from 'src/modules/user/entities/student.entity';
-// import { FOREIGNKEYS } from 'sequelize-typescript';
-
-enum FileType {
-
-}
 
 
-@Table
-export class File extends Model<File> {
+@Table({
+  tableName: 'Payment_Trasaction', // Specify the exact table name
+  freezeTableName: true, // Prevent Sequelize from pluralizing the table name
+})
+export class Payment_Trasaction extends Model<Payment_Trasaction> {
   @PrimaryKey
   @Default(UUIDV4)
   @AllowNull(false)
   @Column(DataType.UUID)
-  file_id: UUID;
-
-  @AllowNull(false)
-  @Column(DataType.STRING)
-  filenames: string;
-
-  @AllowNull(false)
-  @Column(DataType.STRING)
-  type: string;
-
-  @AllowNull(false)
-  @Column(DataType.DATE)
-  time_uploaded: Date;
-
-  @AllowNull(false)
-  @Column(DataType.INTEGER)
-  size: number;
+  transaction_id: UUID;
 
   @AllowNull(false)
   @ForeignKey(() => Student)
@@ -53,5 +36,16 @@ export class File extends Model<File> {
   @BelongsTo(() => Student)
   student: Student;
 
-}
+  @AllowNull(false)
+  @Column(DataType.DATE)
+  Date_time: Date;
 
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
+  value: number;
+
+
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
+  number_of_page: number;
+}
