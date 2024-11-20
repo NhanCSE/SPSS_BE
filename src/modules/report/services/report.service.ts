@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { LOCATION_REPOSITORY, PAPER_REPORT_REPOSITORY, PAYMENT_REPORT_REPOSITORY, PRINTER_REPOSITORY, PRINTING_HISTORY_REPOSITORY, TRANSACTION_REPOSITORY } from "src/common/contants";
 import { GeneralPaperReport, PaymentReport } from "../entities/report.entity";
 import { Payment_Trasaction } from "../entities/transaction.entity";
@@ -7,7 +7,7 @@ import { CreateReportDto } from "../dtos/create-report.dtos";
 import { Op } from "sequelize";
 import { ViewReportDto } from "../dtos/view-report.dtos";
 import { PrintingHistory } from "src/modules/history/entities/printingHistory.entity";
-
+import { Cron, CronExpression } from "@nestjs/schedule";
 @Injectable()
 export class ReportService {
   constructor(
@@ -16,36 +16,75 @@ export class ReportService {
     @Inject(PAPER_REPORT_REPOSITORY) private readonly generalPaperReportRepository: typeof GeneralPaperReport,
     @Inject(PAYMENT_REPORT_REPOSITORY) private readonly paymentReportRepository: typeof PaymentReport,
   ) { };
-  async create(payload: CreateReportDto) {
-    const content = payload.content.toLowerCase();
-    if (content == "paper") {
-      const generalPaperReport = new PaperReportService(
-        this.printingHistoryRepository,
-        this.generalPaperReportRepository
-      );
-      return await generalPaperReport.create(payload);
-    }
-    else if (content == "payment") {
-      const generalPaperReport = new PaymentReportService(
-        this.paymentRepository,
-        this.paymentReportRepository,
-      );
-      return await generalPaperReport.create(payload);
-    }
-    else {
-      throw new Error(`Unsupported content type for report: ${payload.content}`);
-    }
+  @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
+  async createMonthlyPaperReport() {
+    const CreateReport= new createReport(
+      this.printingHistoryRepository,
+      this.paymentRepository,
+      this.generalPaperReportRepository,
+      this.paymentReportRepository,
+    )
+    const payload: CreateReportDto = {
+      content: 'paper',
+     reportDate:new Date().toISOString(),
+     reportType:"monthly",
+    };
+    await CreateReport.create(payload);
 
   }
+  @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
+  async createMonthlyPaymentReport() {
+    const CreateReport= new createReport(
+      this.printingHistoryRepository,
+      this.paymentRepository,
+      this.generalPaperReportRepository,
+      this.paymentReportRepository,
+    )
+    const payload: CreateReportDto = {
+      content: 'payment',
+     reportDate:new Date().toISOString(),
+     reportType:"monthly",
+    };
+    await CreateReport.create(payload);
 
-
+  }
+  @Cron(CronExpression.EVERY_YEAR)
+  async createYearlyPaperReport() {
+    const CreateReport= new createReport(
+      this.printingHistoryRepository,
+      this.paymentRepository,
+      this.generalPaperReportRepository,
+      this.paymentReportRepository,
+    )
+    const payload: CreateReportDto = {
+      content: 'paper',
+      reportDate:new Date().toISOString(),
+      reportType:"yearly",
+    };
+    await CreateReport.create(payload);
+  }
+  @Cron(CronExpression.EVERY_YEAR)
+  async createYearlyPaymentReport() {
+    const CreateReport= new createReport(
+      this.printingHistoryRepository,
+      this.paymentRepository,
+      this.generalPaperReportRepository,
+      this.paymentReportRepository,
+    )
+    const payload: CreateReportDto = {
+      content: 'payment',
+      reportDate:new Date().toISOString(),
+      reportType:"yearly",
+    };
+    await CreateReport.create(payload);
+  }
+  
 
 
   async view(payload: ViewReportDto) {
     const content = payload.content.toLowerCase();
     const type = payload.reportType.toLowerCase();
     const reportDate = new Date(payload.reportDate);
-
     let report;
 
     if (content === "paper") {
@@ -60,7 +99,8 @@ export class ReportService {
           },
         });
       } else if (type === "yearly") {
-        report = await this.generalPaperReportRepository.findOne({
+        report = await this.generalPaperReportRepository.findOne(
+        {
           where: {
             report_type: type,
             [Op.and]: [
@@ -70,12 +110,7 @@ export class ReportService {
           },
         });
       } else {
-        report = await this.generalPaperReportRepository.findOne({
-          where: {
-            report_type: type,
-            report_date: reportDate,
-          },
-        });
+        throw new BadRequestException(" wrong type, type must be monthly or yearly");
       }
     } else if (content === "payment") {
       if (type === "monthly") {
@@ -119,6 +154,35 @@ export class ReportService {
 
 }
 
+class createReport{
+  constructor(
+    @Inject(PRINTING_HISTORY_REPOSITORY) private readonly printingHistoryRepository: typeof PrintingHistory,
+    @Inject(TRANSACTION_REPOSITORY) private readonly paymentRepository: typeof Payment_Trasaction,
+    @Inject(PAPER_REPORT_REPOSITORY) private readonly generalPaperReportRepository: typeof GeneralPaperReport,
+    @Inject(PAYMENT_REPORT_REPOSITORY) private readonly paymentReportRepository: typeof PaymentReport,
+  ) { }
+async create(payload: CreateReportDto) {
+  const content = payload.content.toLowerCase();
+  if (content == "paper") {
+    const generalPaperReport = new PaperReportService(
+      this.printingHistoryRepository,
+      this.generalPaperReportRepository
+    );
+    return await generalPaperReport.create(payload);
+  }
+  else if (content == "payment") {
+    const generalPaperReport = new PaymentReportService(
+      this.paymentRepository,
+      this.paymentReportRepository,
+    );
+    return await generalPaperReport.create(payload);
+  }
+  else {
+    throw new Error(`Unsupported content type for report: ${payload.content}`);
+  }
+
+}
+}
 class PaperReportService {
   constructor(
     @Inject(PRINTING_HISTORY_REPOSITORY) private readonly printingHistoryRepository: typeof PrintingHistory,
@@ -169,10 +233,8 @@ class PaperReportService {
 
     const mostUsePrinter = findMostFrequentValue(printingHistories.map(record => record.printer_id));
 
-    // Calculate peak usage day
+
     const peakDay = findMostFrequentValue(printingHistories.map(record => record.date))
-    // Create a report object
-    console.log(peakDay)
     const report = await this.generalPaperReportRepository.create({
       report_date: reportDate,
       report_type: type,
@@ -258,7 +320,6 @@ function findMostFrequentValue(arr: any[]): any {
   let mostFrequentValue = null;
   let maxCount = 0;
   let maxCountOccurrences = 0;
-  console.log(countMap)
   for (const key in countMap) {
     if (countMap[key] > maxCount) {
       maxCount = countMap[key];
@@ -276,3 +337,4 @@ function findMostFrequentValue(arr: any[]): any {
 
   return mostFrequentValue;
 }
+

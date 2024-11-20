@@ -5,13 +5,15 @@ import { LoggerModule } from "src/common/logger/logger.module";
 import { ResponseModule } from "../response/response.module";
 import { reportProviders } from "./report.provider";
 import { ReportService } from "./services/report.service";
+import { ScheduleModule } from "@nestjs/schedule";
 
 
 @Module({
     imports: [
         DatabaseModule,
         LoggerModule,
-        ResponseModule
+        ResponseModule,
+        ScheduleModule.forRoot()
     ],
     controllers: [ReportController],
     providers: [...reportProviders,ReportService],
