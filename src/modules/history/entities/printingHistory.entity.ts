@@ -14,6 +14,9 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Printer } from '../../printer/entities/printer.entity';
+import { Student } from 'src/modules/user/entities/student.entity';
+import { File } from 'src/modules/file/entities/file.entity';
+
 // import { FOREIGNKEYS } from 'sequelize-typescript';
 
 
@@ -26,8 +29,12 @@ export class PrintingHistory extends Model<PrintingHistory> {
   printing_id: UUID;
 
   @AllowNull(false)
+  @ForeignKey(() => Student)
   @Column(DataType.UUID)
   student_id: UUID;
+
+  @BelongsTo(() => Student)
+  student: Student;
 
   @AllowNull(false)
   @ForeignKey(() => Printer)
@@ -42,8 +49,12 @@ export class PrintingHistory extends Model<PrintingHistory> {
   copies: number;
 
   @AllowNull(false)
+  @ForeignKey(() => File)
   @Column(DataType.UUID)
   file_id: UUID;
+
+  @BelongsTo(() => File)
+  file: File;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
@@ -51,7 +62,7 @@ export class PrintingHistory extends Model<PrintingHistory> {
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  filenames: string
+  fileNames: string
 
   @AllowNull(false)
   @Column(DataType.DATE)

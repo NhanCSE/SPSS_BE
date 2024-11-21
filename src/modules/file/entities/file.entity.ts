@@ -14,32 +14,41 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Student } from 'src/modules/user/entities/student.entity';
+// import { FOREIGNKEYS } from 'sequelize-typescript';
+
+enum FileType {
+
+}
 
 
 @Table
-export class Payment extends Model<Payment> {
+export class File extends Model<File> {
   @PrimaryKey
   @Default(UUIDV4)
   @AllowNull(false)
   @Column(DataType.UUID)
-  transaction_id: UUID;
+  file_id: UUID;
+
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  filenames: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  type: string;
 
   @AllowNull(false)
   @Column(DataType.DATE)
-  date_time: Date;
+  time_uploaded: Date;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-  value: Number;
-
-  @AllowNull(false)
-  @Column(DataType.INTEGER)
-  numberOfPages: number;
+  size: number;
 
   @AllowNull(false)
   @ForeignKey(() => Student)
-  @Column(DataType.UUID)
-  student_id: UUID;
+  @Column(DataType.INTEGER)
+  student_id: number;
 
   @BelongsTo(() => Student)
   student: Student;
