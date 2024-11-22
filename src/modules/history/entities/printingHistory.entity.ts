@@ -30,8 +30,8 @@ export class PrintingHistory extends Model<PrintingHistory> {
 
   @AllowNull(false)
   @ForeignKey(() => Student)
-  @Column(DataType.UUID)
-  student_id: UUID;
+  @Column(DataType.NUMBER)
+  student_id: number;
 
   @BelongsTo(() => Student)
   student: Student;

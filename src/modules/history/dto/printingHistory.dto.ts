@@ -32,3 +32,14 @@ export class CreatePrintingHistoryDto {
   @IsString()
   filenames: string;
 }
+
+export class ViewPrintingHistoryDto {
+  student_id: number;
+  printer_id: UUID;
+  copies: number;
+  file_id: UUID;
+  page_print: number;
+  date: Date;
+  paper_size: string;
+  filenames: string;
+}
