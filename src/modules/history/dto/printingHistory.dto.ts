@@ -3,7 +3,7 @@ import { UUID } from 'crypto';
 
 export class CreatePrintingHistoryDto {
 
-  student_id: number;
+  studentId: number;
 
   @IsUUID()
   printer_id: UUID;
@@ -13,7 +13,7 @@ export class CreatePrintingHistoryDto {
   copies: number;
 
   @IsUUID()
-  file_id: UUID;
+  fileId: UUID;
 
   @IsInt()
   @Min(1)
@@ -29,5 +29,5 @@ export class CreatePrintingHistoryDto {
   paper_size: string;
 
   @IsString()
-  filenames: string;
+  filename: string;
 }

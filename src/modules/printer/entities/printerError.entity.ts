@@ -17,7 +17,9 @@ import { Printer } from './printer.entity';
 import { ErrorHistory } from 'src/modules/history/entities/errorHistory.entity';
 
 
-@Table
+@Table({
+  tableName: "printer_error"
+})
 export class PrinterError extends Model<PrinterError> {
   @PrimaryKey
   @AllowNull(false)

@@ -1,4 +1,3 @@
-
 export class CreatePrinterDto {
     status: boolean;
     A3PaperCount: number;
@@ -7,6 +6,6 @@ export class CreatePrinterDto {
     building: string;
     floor: number;
     room: number;
-    brand: string
-    model: string
-}
+    brand: string;
+    model: string;
+  }

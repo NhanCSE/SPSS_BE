@@ -15,5 +15,6 @@ import { ResponseModule } from "../response/response.module";
     ],
     controllers: [PrinterController],
     providers: [...printerProviders, PrinterService],
+    exports: [PrinterService]
 })
 export class PrinterModule {}

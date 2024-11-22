@@ -1,8 +1,9 @@
 import { LOCATION_REPOSITORY, PAPER_REPORT_REPOSITORY, PAYMENT_REPORT_REPOSITORY, PRINTER_REPOSITORY, PRINTING_HISTORY_REPOSITORY, TRANSACTION_REPOSITORY } from "src/common/contants";
 // import { PrintingHistory } from "./entities/printingHistory.entity";
-import { Payment_Trasaction } from "./entities/transaction.entity";
-import { GeneralPaperReport, PaymentReport } from "./entities/report.entity";
+import { PaymentTrasaction } from "./entities/transaction.entity";
+import { GeneralPaperReport } from "./entities/general-report.entity";
 import { PrintingHistory } from "../history/entities/printingHistory.entity";
+import { PaymentReport } from "./entities/payment-report.entity";
 
 
 export const reportProviders = [{
@@ -10,7 +11,7 @@ export const reportProviders = [{
     useValue: PrintingHistory,
 }, {
     provide: TRANSACTION_REPOSITORY,
-    useValue: Payment_Trasaction,
+    useValue: PaymentTrasaction,
 }, {
     provide: PAPER_REPORT_REPOSITORY,
     useValue: GeneralPaperReport,

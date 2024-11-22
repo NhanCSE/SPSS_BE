@@ -17,17 +17,19 @@ import { Printer } from '../../printer/entities/printer.entity';
 // import { FOREIGNKEYS } from 'sequelize-typescript';
 
 
-@Table
+@Table({
+  tableName: "printing_history"
+})
 export class PrintingHistory extends Model<PrintingHistory> {
   @PrimaryKey
   @Default(UUIDV4)
   @AllowNull(false)
   @Column(DataType.UUID)
-  printing_id: UUID;
+  printingId: UUID;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-  student_id: number;
+  studentId: number;
 
   @AllowNull(false)
   @ForeignKey(() => Printer)
@@ -43,7 +45,7 @@ export class PrintingHistory extends Model<PrintingHistory> {
 
   @AllowNull(false)
   @Column(DataType.UUID)
-  file_id: UUID;
+  fileId: UUID;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)

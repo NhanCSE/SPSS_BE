@@ -40,14 +40,14 @@ export class UserController {
     }
   }
 
-  @Get('getPaper/:student_id')
+  @Get('paper/search/:studentId')
   async getBalance(
     @Req() req,
-    @Param('student_id') student_id: number,
+    @Param('studentId') studentId: number,
     @Res() res,
   ) {
     try {
-      const paper = await this.userService.getBalance(student_id);
+      const paper = await this.userService.getBalance(studentId);
       this.response.initResponse(true, "Lấy số lượng giấy thành công", paper);
       return res.status(HttpStatus.CREATED).json(this.response);
     } catch (error) {
@@ -67,14 +67,14 @@ export class UserController {
     }
   }
 
-  @Get('getUser/:student_id')
+  @Get('search/:studentId')
   async getUser(
     @Req() req,
-    @Param('student_id') student_id: number,
+    @Param('studentId') studentId: number,
     @Res() res,
   ) {
     try {
-      const userInfo = await this.userService.getUser(student_id);
+      const userInfo = await this.userService.getUser(studentId);
       this.response.initResponse(true, "Lấy thông tin người dùng thành công", userInfo);
       return res.status(HttpStatus.CREATED).json(this.response);
     } catch (error) {

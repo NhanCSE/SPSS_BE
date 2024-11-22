@@ -6,35 +6,45 @@ import {
     IsDate,
     IsArray,
     ArrayNotEmpty,
+    IsNumber,
   } from 'class-validator';
   
   export class CreateSystemConfigDto {
     @IsOptional()
     @IsDate()
     historyClearTime: Date;
+
     @IsOptional()
     @IsArray()
     @ArrayNotEmpty()
-    allowFile: string[];
+    allowedFiles: string[];
+
     @IsOptional()
     @IsDate()
     freePaperResetDate: Date;
+
+    
+    @IsNumber()
     defaultPaper: number;
   }
   export class UpdateSystemConfigDto {
     @IsUUID()
     @IsString()
     versionId: string;
+
     @IsOptional()
     @IsDate()
-    historyClearTime?: Date;
+    historyClearTime: Date;
+
     @IsOptional()
-    allowFile?: string[];
+    allowedFiles: string[];
+
     @IsOptional()
     @IsDate()
-    freePaperResetDate?: Date;
+    freePaperResetDate: Date;
+
     @IsOptional()
     @IsInt()
-    defaultPaper?: number;
+    defaultPaper: number;
   }
   

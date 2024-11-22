@@ -7,35 +7,27 @@ import { CreatePrintingHistoryDto } from '../dto/printingHistory.dto';
 @Injectable()
 export class PrintingHistoryService {
   async createPrintingHistory(createPrintingHistoryDto: CreatePrintingHistoryDto): Promise<any> {
-    try {
-      const file = await File.findByPk(createPrintingHistoryDto.file_id);
+    const file = await File.findByPk(createPrintingHistoryDto.fileId);
 
-      if (!file) {
-        console.log('File not found');
-        return;
-      }
-
-      const printingHistoryData = {
-        ...createPrintingHistoryDto,
-        filenames: file.filenames,
-      };
-      const newPrintingHistory = await PrintingHistory.create(printingHistoryData);
-      return newPrintingHistory;
-    } catch (error) {
-      throw new Error(`Failed to create printing history: ${error.message}`);
+    if (!file) {
+      console.log('File not found');
+      return;
     }
+
+    const printingHistoryData = {
+      ...createPrintingHistoryDto,
+      filename: file.filename,
+    };
+    const newPrintingHistory = await PrintingHistory.create(printingHistoryData);
+    return newPrintingHistory;
   }
 
-  // Retrieve a printing history entry by printing_id
-  async getPrintingHistory(printing_id: string): Promise<any> {
-    try {
-      const printingHistory = await PrintingHistory.findOne({ where: { printing_id } });
-      if (!printingHistory) {
-        throw new Error(`Printing history with ID ${printing_id} not found.`);
-      }
-      return printingHistory;
-    } catch (error) {
-      throw new Error(`Failed to retrieve printing history: ${error.message}`);
+  // Retrieve a printing history entry by printingId
+  async getPrintingHistory(printingId: string): Promise<any> {
+    const printingHistory = await PrintingHistory.findOne({ where: { printingId } });
+    if (!printingHistory) {
+      throw new Error(`Printing history with ID ${printingId} not found.`);
     }
+    return printingHistory;
   }
 }

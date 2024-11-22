@@ -21,7 +21,7 @@ import { LoggerService } from 'src/common/logger/logger.service';
 import { SystemConfigurationService } from '../services/system.service';
 import { CreateSystemConfigDto } from '../dtos/system_configuration.dtos';
 
-@Controller('systemConfiguration')
+@Controller('system')
 export class SystemConfigurationController {
   constructor(
     private readonly systemConfigurationService: SystemConfigurationService,
@@ -29,7 +29,7 @@ export class SystemConfigurationController {
     private readonly response: Response,
   ) { }
 
-  @Post('/create')
+  @Post('/config/create')
   async createSystemConfiguration(@Body() dto: CreateSystemConfigDto, @Res() res) {
     try {
       const createdPrinter = await this.systemConfigurationService.create(dto);
@@ -54,7 +54,7 @@ export class SystemConfigurationController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
-  @Get('/searchAll')
+  @Get('/search')
   async getAll(@Res() res) {
     try {
       const result = await this.systemConfigurationService.searchAll();
@@ -70,7 +70,7 @@ export class SystemConfigurationController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
-  @Get('/searchNewest')
+  @Get('/newest/search')
   async getNewest(@Res() res) {
     try {
       const result = await this.systemConfigurationService.searchNewest();

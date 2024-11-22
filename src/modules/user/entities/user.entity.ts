@@ -14,14 +14,20 @@ import {
     ForeignKey,
     BelongsTo,
     AutoIncrement,
+    HasOne,
 } from 'sequelize-typescript';
+import { UserRole } from 'src/common/contants';
+import { Student } from './student.entity';
+import { Admin } from './admin.entity';
 
-@Table
+@Table({
+    tableName: "user"
+})
 export class User extends Model<User> {
     @PrimaryKey
     @AutoIncrement
     @Column(DataType.INTEGER)
-    sso_id: number;
+    ssoId: number;
 
     @AllowNull(false)
     @Column(DataType.STRING)
@@ -44,6 +50,15 @@ export class User extends Model<User> {
     phone: String;
 
     @AllowNull(false)
-    @Column(DataType.STRING)
-    role: string;
+    @Column({
+        type: DataType.ENUM,
+        values: [UserRole.ADMIN, UserRole.STUDENT]
+    })
+    role: UserRole;
+
+    @HasOne(() => Student)
+    student: Student
+
+    @HasOne(() => Admin)
+    admin: Admin
 }

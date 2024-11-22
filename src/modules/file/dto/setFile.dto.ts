@@ -1,40 +1,18 @@
-import { IsUUID, IsString, IsInt, IsDate, Min } from 'class-validator';
-import { UUID } from 'crypto';
+import { IsString, IsInt, IsDate, Min, IsNumber } from 'class-validator';
 
 export class SetFileDto {
     @IsString()
-    filenames: string;
+    filename: string;
 
     @IsString()
     type: string;
 
     @IsDate()
-    time_uploaded: Date;
+    timeUploaded: Date;
 
     @IsInt()
     size: number;
 
-    @IsUUID()
-    student_id: number;
+    @IsNumber()
+    studentId: number;
 }
-// export class SetFileDto {
-//     @IsUUID()
-//     student_id: string;
-
-//     @IsUUID()
-//     printer_id: string;
-
-//     @IsInt()
-//     @Min(1)
-//     copies: number;
-
-//     @IsUUID()
-//     file_id: string;
-
-//     @IsInt()
-//     @Min(1)
-//     page_print: number;
-
-//     @IsDate()
-//     date: Date;
-// }

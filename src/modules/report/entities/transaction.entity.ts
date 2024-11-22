@@ -18,27 +18,26 @@ import { Student } from 'src/modules/user/entities/student.entity';
 
 
 @Table({
-  tableName: 'Payment_Trasaction', // Specify the exact table name
-  freezeTableName: true, // Prevent Sequelize from pluralizing the table name
+  tableName: "transaction"
 })
-export class Payment_Trasaction extends Model<Payment_Trasaction> {
+export class PaymentTrasaction extends Model<PaymentTrasaction> {
   @PrimaryKey
   @Default(UUIDV4)
   @AllowNull(false)
   @Column(DataType.UUID)
-  transaction_id: UUID;
+  transactionId: UUID;
 
   @AllowNull(false)
   @ForeignKey(() => Student)
   @Column(DataType.INTEGER)
-  student_id: number;
+  studentId: number;
 
   @BelongsTo(() => Student)
   student: Student;
 
   @AllowNull(false)
   @Column(DataType.DATE)
-  Date_time: Date;
+  dateTime: Date;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
@@ -47,5 +46,5 @@ export class Payment_Trasaction extends Model<Payment_Trasaction> {
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-  number_of_page: number;
+  numberOfPage: number;
 }

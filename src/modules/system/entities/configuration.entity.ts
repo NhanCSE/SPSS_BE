@@ -16,13 +16,15 @@ import {
 } from 'sequelize-typescript';
 
 
-@Table
+@Table({
+  tableName: "configuration"
+})
 export class SystemConfiguration extends Model<SystemConfiguration> {
 
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  versionID: Number;
+  versionId: Number;
 
   @Default(() => {
     const date = new Date();
@@ -34,7 +36,7 @@ export class SystemConfiguration extends Model<SystemConfiguration> {
 
   @Default(['PDF'])
   @Column(DataType.JSON)
-  allowFile: string[];
+  allowedFiles: string[];
 
   @Default(() => {
     const date = new Date();

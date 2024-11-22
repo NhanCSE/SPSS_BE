@@ -14,24 +14,25 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Student } from 'src/modules/user/entities/student.entity';
-// import { FOREIGNKEYS } from 'sequelize-typescript';
 
 enum FileType {
 
 }
 
 
-@Table
+@Table({
+  tableName: "file"
+})
 export class File extends Model<File> {
   @PrimaryKey
   @Default(UUIDV4)
   @AllowNull(false)
   @Column(DataType.UUID)
-  file_id: UUID;
+  fileId: UUID;
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  filenames: string;
+  filename: string;
 
   @AllowNull(false)
   @Column(DataType.STRING)
@@ -39,7 +40,7 @@ export class File extends Model<File> {
 
   @AllowNull(false)
   @Column(DataType.DATE)
-  time_uploaded: Date;
+  timeUploaded: Date;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
@@ -48,7 +49,7 @@ export class File extends Model<File> {
   @AllowNull(false)
   @ForeignKey(() => Student)
   @Column(DataType.INTEGER)
-  student_id: number;
+  studentId: number;
 
   @BelongsTo(() => Student)
   student: Student;

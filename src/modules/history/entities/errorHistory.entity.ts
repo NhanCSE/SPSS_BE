@@ -17,7 +17,9 @@ import { Printer } from '../../printer/entities/printer.entity';
 // import { FOREIGNKEYS } from 'sequelize-typescript';
 
 
-@Table
+@Table({
+  tableName: "error_history"
+})
 export class ErrorHistory extends Model<History> {
   @PrimaryKey
   @Default(UUIDV4)
@@ -27,7 +29,7 @@ export class ErrorHistory extends Model<History> {
 
   @AllowNull(false)
   @Column(DataType.UUID)
-  student_id: UUID;
+  studentId: UUID;
 
   @AllowNull(false)
   @ForeignKey(() => Printer)

@@ -1,24 +1,24 @@
 
 export class ReturnGeneralPaymentReportDto{
-    report_ID: string;
-    report_date: Date;
-    report_type: string;    // weekly, monthly or yearly
+    reportId: string;
+    reportDate: Date;
+    reportType: string;    // weekly, monthly or yearly
     content : string ;   
-    biggest_pay: number;
-    smallest_pay: number;
-    total_pay:number;    
+    biggestPay: number;
+    smallestPay: number;
+    totalPay:number;    
     peak : Date ;          // 
 }
 
 export class ReturnGeneralPaperReportDto{
-    report_date: Date;
-    report_type: string;
+    reportDate: Date;
+    reportType: string;
     content : string ; 
-    A3_paper_count: number;
-    A4_paper_count: number;
-    A5_paper_count : number;
+    A3PaperCount: number;
+    A4PaperCount: number;
+    A5PaperCount : number;
     total_paper_count: number;
-    most_use_printer: string|null;
+    mostUsePrinter: string|null;
     peak: Date|null;
 }
 

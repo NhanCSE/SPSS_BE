@@ -12,8 +12,8 @@ import { Admin } from "src/modules/user/entities/admin.entity";
 import { Student } from "src/modules/user/entities/student.entity";
 import { User } from "src/modules/user/entities/user.entity";
 import { Payment } from "src/modules/payment/entities/payment.entity";
-import { GeneralPaperReport } from "src/modules/report/entities/report.entity";
-import { Payment_Trasaction } from "src/modules/report/entities/transaction.entity";
+import { GeneralPaperReport } from "src/modules/report/entities/general-report.entity";
+import { PaymentTrasaction } from "src/modules/report/entities/transaction.entity";
 import { File } from "src/modules/file/entities/file.entity";
 
 
@@ -38,7 +38,7 @@ export const databaseProviders = [
       const sequelize = new Sequelize(config);
 
       // sequelize.addModels([PrinterError, Printer, Location, File, ErrorHistory, PrintingHistory, SysConfigHistory, Report, SystemConfiguration, Admin, Student, User, Payment]);
-      sequelize.addModels([PrinterError, Printer, Location, Admin, Student, User, ErrorHistory, PrintingHistory, SysConfigHistory, SystemConfiguration, GeneralPaperReport, Payment_Trasaction, File]);
+      sequelize.addModels([PrinterError, Printer, Location, Admin, Student, User, ErrorHistory, PrintingHistory, SysConfigHistory, SystemConfiguration, GeneralPaperReport, PaymentTrasaction, File]);
       await sequelize.sync();
 
       try {

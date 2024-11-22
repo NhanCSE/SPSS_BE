@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ADMIN_REPOSITORY, STUDENT_REPOSITORY, USER_REPOSITORY } from "src/common/contants";
+import { ADMIN_REPOSITORY, STUDENT_REPOSITORY, USER_REPOSITORY, UserRole } from "src/common/contants";
 // import { CreatePrinterDto } from "../dtos/create-printer.dtos";
 import { User } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/createUser.dto";
@@ -28,38 +28,48 @@ export class UserService {
       role: payload.role
     });
 
-    if (payload.role == 'STUDENT') {
-      const student = await this.studentRepository.create({
-        sso_id: user['sso_id'],
-        bought_paper: 0,
-        current_free_paper: 0
+    if (payload.role == UserRole.STUDENT) {
+      await this.studentRepository.create({
+        ssoId: user['ssoId'],
+        boughtPaper: 0,
+        currentFreePaper: 0
+      });
+    } else if(payload.role == UserRole.ADMIN) {
+      await this.adminRepository.create({
+        ssoId: user['ssoId'],
+        lastLogin: new Date()
       });
     }
 
     return user;
   }
 
-  async decreasePage(student_id: number, pageNumber: number) {
+  async decreasePage(studentId: number, pageNumber: number) {
     try {
 
       const student = await this.studentRepository.findOne({
         where: {
-          sso_id: student_id
+          ssoId: studentId
         }
       })
 
-      if (student['bought_paper'] > 0 && student['bought_paper'] > pageNumber) {
-        student.bought_paper = student['bought_paper'] - pageNumber;
-        student.save();
-        return true;
-      }
-      else if (student['current_free_paper'] > 0 && student['current_free_paper'] > pageNumber) {
-        student.current_free_paper = student['current_free_paper'] - pageNumber;
-        student.save();
-        return true;
+
+      const freePaperDec = Math.min(student.currentFreePaper, pageNumber);
+      pageNumber -= freePaperDec;
+
+      const boughtPaperDec = Math.min(student.boughtPaper, pageNumber);
+      pageNumber -= boughtPaperDec;
+
+      if(pageNumber > 0) {
+        return false;
       }
 
-      return false;
+      student.currentFreePaper -= freePaperDec;
+      student.boughtPaper -= boughtPaperDec;
+      student.save();
+
+
+      return true;
     }
     catch (error) {
       console.log(error);
@@ -67,30 +77,27 @@ export class UserService {
 
   }
 
-  async getBalance(student_id: number) {
+  async getBalance(studentId: number) {
     const student = await this.studentRepository.findOne({
       where: {
-        sso_id: student_id
-      }
+        ssoId: studentId
+      },
+      attributes: ["currentFreePaper", "boughtPaper"]
     })
 
-    const paper = {
-      "bought_paper": student['bought_paper'],
-      "free_paper": student['current_free_paper']
-    }
-    return paper;
+    return student;
   }
 
-  async getUser(student_id: number) {
+  async getUser(studentId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        sso_id: student_id
+        ssoId: studentId
       }
     })
 
     const student = await this.userRepository.findOne({
       where: {
-        sso_id: student_id
+        ssoId: studentId
       }
     })
 

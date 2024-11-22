@@ -1,18 +1,19 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { LOCATION_REPOSITORY, PAPER_REPORT_REPOSITORY, PAYMENT_REPORT_REPOSITORY, PRINTER_REPOSITORY, PRINTING_HISTORY_REPOSITORY, TRANSACTION_REPOSITORY } from "src/common/contants";
-import { GeneralPaperReport, PaymentReport } from "../entities/report.entity";
-import { Payment_Trasaction } from "../entities/transaction.entity";
+import { GeneralPaperReport} from "../entities/general-report.entity";
+import { PaymentTrasaction } from "../entities/transaction.entity";
 // import { PrintingHistory } from "../entities/printingHistory.entity";
 import { CreateReportDto } from "../dtos/create-report.dtos";
 import { Op } from "sequelize";
 import { ViewReportDto } from "../dtos/view-report.dtos";
 import { PrintingHistory } from "src/modules/history/entities/printingHistory.entity";
+import { PaymentReport } from "../entities/payment-report.entity";
 
 @Injectable()
 export class ReportService {
   constructor(
     @Inject(PRINTING_HISTORY_REPOSITORY) private readonly printingHistoryRepository: typeof PrintingHistory,
-    @Inject(TRANSACTION_REPOSITORY) private readonly paymentRepository: typeof Payment_Trasaction,
+    @Inject(TRANSACTION_REPOSITORY) private readonly paymentRepository: typeof PaymentTrasaction,
     @Inject(PAPER_REPORT_REPOSITORY) private readonly generalPaperReportRepository: typeof GeneralPaperReport,
     @Inject(PAYMENT_REPORT_REPOSITORY) private readonly paymentReportRepository: typeof PaymentReport,
   ) { };
@@ -52,28 +53,28 @@ export class ReportService {
       if (type === "monthly") {
         report = await this.generalPaperReportRepository.findOne({
           where: {
-            report_type: type,
+            reportType: type,
             [Op.and]: [
-              { report_date: { [Op.gte]: new Date(reportDate.getFullYear(), reportDate.getMonth(), 1) } },
-              { report_date: { [Op.lt]: new Date(reportDate.getFullYear(), reportDate.getMonth() + 1, 1) } }
+              { reportDate: { [Op.gte]: new Date(reportDate.getFullYear(), reportDate.getMonth(), 1) } },
+              { reportDate: { [Op.lt]: new Date(reportDate.getFullYear(), reportDate.getMonth() + 1, 1) } }
             ]
           },
         });
       } else if (type === "yearly") {
         report = await this.generalPaperReportRepository.findOne({
           where: {
-            report_type: type,
+            reportType: type,
             [Op.and]: [
-              { report_date: { [Op.gte]: new Date(reportDate.getFullYear(), 0, 1) } },
-              { report_date: { [Op.lt]: new Date(reportDate.getFullYear() + 1, 0, 1) } }
+              { reportDate: { [Op.gte]: new Date(reportDate.getFullYear(), 0, 1) } },
+              { reportDate: { [Op.lt]: new Date(reportDate.getFullYear() + 1, 0, 1) } }
             ]
           },
         });
       } else {
         report = await this.generalPaperReportRepository.findOne({
           where: {
-            report_type: type,
-            report_date: reportDate,
+            reportType: type,
+            reportDate: reportDate,
           },
         });
       }
@@ -81,28 +82,28 @@ export class ReportService {
       if (type === "monthly") {
         report = await this.paymentReportRepository.findOne({
           where: {
-            report_type: type,
+            reportType: type,
             [Op.and]: [
-              { report_date: { [Op.gte]: new Date(reportDate.getFullYear(), reportDate.getMonth(), 1) } },
-              { report_date: { [Op.lt]: new Date(reportDate.getFullYear(), reportDate.getMonth() + 1, 1) } }
+              { reportDate: { [Op.gte]: new Date(reportDate.getFullYear(), reportDate.getMonth(), 1) } },
+              { reportDate: { [Op.lt]: new Date(reportDate.getFullYear(), reportDate.getMonth() + 1, 1) } }
             ]
           },
         });
       } else if (type === "yearly") {
         report = await this.paymentReportRepository.findOne({
           where: {
-            report_type: type,
+            reportType: type,
             [Op.and]: [
-              { report_date: { [Op.gte]: new Date(reportDate.getFullYear(), 0, 1) } },
-              { report_date: { [Op.lt]: new Date(reportDate.getFullYear() + 1, 0, 1) } }
+              { reportDate: { [Op.gte]: new Date(reportDate.getFullYear(), 0, 1) } },
+              { reportDate: { [Op.lt]: new Date(reportDate.getFullYear() + 1, 0, 1) } }
             ]
           },
         });
       } else {
         report = await this.paymentReportRepository.findOne({
           where: {
-            report_type: type,
-            report_date: reportDate,
+            reportType: type,
+            reportDate: reportDate,
           },
         });
       }
@@ -174,12 +175,12 @@ class PaperReportService {
     // Create a report object
     console.log(peakDay)
     const report = await this.generalPaperReportRepository.create({
-      report_date: reportDate,
-      report_type: type,
-      A3_paper_count: totalA3PaperCount,
-      A4_paper_count: totalA4PaperCount,
-      A5_paper_count: totalA5PaperCount,
-      most_use_printer: mostUsePrinter,
+      reportDate: reportDate,
+      reportType: type,
+      A3PaperCount: totalA3PaperCount,
+      A4PaperCount: totalA4PaperCount,
+      A5PaperCount: totalA5PaperCount,
+      mostUsePrinter: mostUsePrinter,
       peak: peakDay ? new Date(peakDay) : null,
     });
 
@@ -189,19 +190,19 @@ class PaperReportService {
 
 class PaymentReportService {
   constructor(
-    @Inject(TRANSACTION_REPOSITORY) private readonly paymentRepository: typeof Payment_Trasaction,
+    @Inject(TRANSACTION_REPOSITORY) private readonly paymentRepository: typeof PaymentTrasaction,
     @Inject(PAYMENT_REPORT_REPOSITORY) private readonly paymentReportRepository: typeof PaymentReport,
   ) { };
   async create(payload: CreateReportDto) {
     const type = payload.reportType.toLowerCase();
     const reportDate = new Date(payload.reportDate);
-    let transactions: Payment_Trasaction[];
+    let transactions: PaymentTrasaction[];
     if (type === 'monthly') {
       const startOfMonth = new Date(reportDate.getFullYear(), reportDate.getMonth(), 1);
       const endOfMonth = new Date(reportDate.getFullYear(), reportDate.getMonth() + 1, 0);
       transactions = await this.paymentRepository.findAll({
         where: {
-          Date_time: {
+          dateTime: {
             [Op.between]: [startOfMonth, endOfMonth]
           }
         }
@@ -211,7 +212,7 @@ class PaymentReportService {
       const endOfYear = new Date(reportDate.getFullYear(), 11, 31);
       transactions = await this.paymentRepository.findAll({
         where: {
-          Date_time: {
+          dateTime: {
             [Op.between]: [startOfYear, endOfYear]
           }
         }
@@ -220,20 +221,20 @@ class PaymentReportService {
       transactions = await this.paymentRepository.findAll();
     }
 
-    const totalPay = transactions.reduce((sum, record) => sum + (record.value * record.number_of_page), 0);
-    const biggestPay = Math.max(...transactions.map(record => record.value * record.number_of_page));
-    const smallestPay = Math.min(...transactions.map(record => record.value * record.number_of_page));
+    const totalPay = transactions.reduce((sum, record) => sum + (record.value * record.numberOfPage), 0);
+    const biggestPay = Math.max(...transactions.map(record => record.value * record.numberOfPage));
+    const smallestPay = Math.min(...transactions.map(record => record.value * record.numberOfPage));
 
     // Calculate peak usage day
-    const peakDay = findMostFrequentValue(transactions.map(record => record.Date_time))
+    const peakDay = findMostFrequentValue(transactions.map(record => record.dateTime))
 
     // Create a report object
     const report = await this.paymentReportRepository.create({
-      report_date: reportDate,
-      report_type: type,
-      biggest_pay: biggestPay,
-      smallest_pay: smallestPay,
-      total_pay: totalPay,
+      reportDate: reportDate,
+      reportType: type,
+      biggestPay: biggestPay,
+      smallestPay: smallestPay,
+      totalPay: totalPay,
       peak: peakDay ? new Date(peakDay) : null,
     });
 

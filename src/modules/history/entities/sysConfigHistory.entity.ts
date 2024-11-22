@@ -18,7 +18,9 @@ import { SystemConfiguration } from 'src/modules/system/entities/configuration.e
 import { Admin } from 'src/modules/user/entities/admin.entity';
 
 
-@Table
+@Table({
+  tableName: "sys_config_history"
+})
 export class SysConfigHistory extends Model<SysConfigHistory> {
 
   @PrimaryKey

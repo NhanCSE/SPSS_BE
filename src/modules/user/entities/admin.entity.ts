@@ -12,22 +12,26 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  HasOne,
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 // import { FOREIGNKEYS } from 'sequelize-typescript';
 
 
-@Table
+@Table({
+  tableName: "admin"
+})
 export class Admin extends Model<Admin> {
 
-  @PrimaryKey
   @AllowNull(false)
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
-  sso_id: number;
+  ssoId: number;
 
   @AllowNull(false)
-  @Column(DataType.INTEGER)
-  last_login: Date;
+  @Column(DataType.DATE)
+  lastLogin: Date;
 
+  @BelongsTo(() => User)
+  user: User
 }

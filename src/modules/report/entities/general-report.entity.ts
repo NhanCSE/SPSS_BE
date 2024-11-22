@@ -1,3 +1,4 @@
+
 import { UUID } from 'crypto';
 import { UUIDV4 } from 'sequelize';
 import {
@@ -13,38 +14,46 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { Student } from 'src/modules/user/entities/student.entity';
 
 
 @Table({
-  tableName: "payment"
+  tableName: "general_paper_report"
 })
-export class Payment extends Model<Payment> {
+export class GeneralPaperReport extends Model<GeneralPaperReport> {
   @PrimaryKey
   @Default(UUIDV4)
   @AllowNull(false)
   @Column(DataType.UUID)
-  transactionId: UUID;
+  reportId: UUID;
 
   @AllowNull(false)
   @Column(DataType.DATE)
-  dateTime: Date;
+  reportDate: Date;
+
 
   @AllowNull(false)
+  @Column(DataType.STRING)
+  reportType: string;
+
+
+  @Default(0)
   @Column(DataType.INTEGER)
-  value: Number;
+  A3PaperCount: number;
 
-  @AllowNull(false)
+  @Default(0)
   @Column(DataType.INTEGER)
-  numberOfPages: number;
+  A4PaperCount: number;
 
-  @AllowNull(false)
-  @ForeignKey(() => Student)
-  @Column(DataType.UUID)
-  studentId: UUID;
+  @Default(0)
+  @Column(DataType.INTEGER)
+  A5PaperCount: number;
 
-  @BelongsTo(() => Student)
-  student: Student;
+  //Note 1
+  @Column(DataType.STRING)
+  mostUsePrinter: string;
 
+  @Column(DataType.DATE)
+  peak: Date;
 }
+
 
