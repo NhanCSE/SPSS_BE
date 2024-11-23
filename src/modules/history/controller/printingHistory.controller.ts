@@ -18,7 +18,6 @@ export class PrintingHistoryController {
     async viewPrintingHistory(
         @Req() req,
         @Param('student_ID') student_id: number,
-        @Body() dto: ViewPrintingHistoryDto, 
         @Res() res,
     ) {
         try {

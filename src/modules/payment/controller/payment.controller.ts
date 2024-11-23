@@ -6,7 +6,7 @@ import { CreatePaymentDto } from "../dto/payment.dto";
 import { ViewPaymentDto } from "../dto/payment.dto";
 
 
-@Controller('Payment')
+@Controller('payment')
 export class PaymentController {
     constructor(
         private readonly paymentService: PaymentService,
@@ -19,12 +19,11 @@ export class PaymentController {
     async viewPrintingHistory(
         @Req() req,
         @Param('student_ID') student_id: number,
-        @Body() dto: ViewPaymentDto, 
         @Res() res,
     ) {
         try {
             const viewPrintingHistory = await this.paymentService.getPaymentHistories(student_id);
-            this.response.initResponse(true, "Printing History showed!", viewPrintingHistory);
+            this.response.initResponse(true, "Payment History showed!", viewPrintingHistory);
             return res.status(HttpStatus.OK).json(this.response);
         } catch (error) {
             this.logger.error(error.message, error.stack);
