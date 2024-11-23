@@ -31,7 +31,7 @@ export class User extends Model<User> {
 
     @AllowNull(false)
     @Column(DataType.STRING)
-    password: String;
+    password: string;
 
     @AllowNull(false)
     @Column(DataType.STRING)
@@ -39,15 +39,15 @@ export class User extends Model<User> {
 
     @AllowNull(false)
     @Column(DataType.STRING)
-    username: String;
+    username: string;
 
     @AllowNull(false)
     @Column(DataType.STRING)
-    email: String;
+    email: string;
 
     @AllowNull(false)
     @Column(DataType.STRING)
-    phone: String;
+    phone: string;
 
     @AllowNull(false)
     @Column({

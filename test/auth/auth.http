@@ -1,0 +1,33 @@
+
+###
+POST http://localhost:3000/v1/auth/signup
+Content-Type: application/json
+
+{
+    "password": "studenttest1",
+    "username": "studenttest1",
+    "name": "STUDENT TEST",
+    "email": "student1@gmail.com",
+    "phoneNumber": "0123456789",
+    "role": "Học viên"
+}
+
+###
+
+POST http://localhost:3000/v1/auth/login
+Content-Type: application/json
+
+{
+    "password": "studenttest1",
+    "username": "studenttest1"
+}
+
+###
+
+GET http://localhost:3000/v1/user/search/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6Ikjhu41jIHZpw6puIiwiaWF0IjoxNzMyMzg0NzMwLCJleHAiOjE3MzI0Mjc5MzB9.Ho6Z5pAWybIgs3YI2-PovPiQyWSrFXR7a-7KU-gPnGI
+
+{
+    
+}

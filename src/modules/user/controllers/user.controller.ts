@@ -1,8 +1,11 @@
-import { BadRequestException, Body, Controller, Get, HttpStatus, InternalServerErrorException, Param, Post, Req, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpStatus, InternalServerErrorException, Param, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { Response } from "src/modules/response/response.entity";
 import { LoggerService } from "src/common/logger/logger.service";
 import { UserService } from "../services/user.service";
 import { CreateUserDto } from "../dtos/createUser.dto";
+import { Roles } from "src/common/decorators/roles.decorator";
+import { UserRole } from "src/common/contants";
+import { JwtAuthGuard } from "src/common/guards/authenticate.guard";
 
 @Controller('user')
 export class UserController {
@@ -67,6 +70,8 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.STUDENT)
   @Get('search/:studentId')
   async getUser(
     @Req() req,

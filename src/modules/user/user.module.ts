@@ -7,15 +7,24 @@ import { ResponseModule } from "../response/response.module";
 import { UserProviders } from './user.provider';
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "./services/user.service";
+import { JwtModule } from "@nestjs/jwt";
+import { AuthController } from "./controllers/auth.controller";
+import { AuthService } from "./services/auth.service";
+import { LocalStrategy } from "./strategies/local.strategy";
+import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
   imports: [
     DatabaseModule,
     LoggerModule,
-    ResponseModule
+    ResponseModule,
+    JwtModule.register({
+      secret: process.env.JWT_ACCESS_KEY,
+      signOptions: { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION },
+    })
   ],
-  controllers: [UserController],
-  providers: [UserService, ...UserProviders],
+  controllers: [UserController, AuthController],
+  providers: [UserService, ...UserProviders, AuthService, LocalStrategy, JwtStrategy],
 })
 export class UserModule { }
 
