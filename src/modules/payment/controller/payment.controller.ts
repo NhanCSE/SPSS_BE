@@ -16,14 +16,14 @@ export class PaymentController {
 
 
     @Get('view/:student_ID?')
-    async viewPrintingHistory(
+    async viewPaymentHistory(
         @Req() req,
         @Param('student_ID') student_id: number,
         @Res() res,
     ) {
         try {
-            const viewPrintingHistory = await this.paymentService.getPaymentHistories(student_id);
-            this.response.initResponse(true, "Payment History showed!", viewPrintingHistory);
+            const viewPaymentHistory = await this.paymentService.getPaymentHistories(student_id);
+            this.response.initResponse(true, "Payment History showed!", viewPaymentHistory);
             return res.status(HttpStatus.OK).json(this.response);
         } catch (error) {
             this.logger.error(error.message, error.stack);
