@@ -458,11 +458,11 @@ export class PrinterService {
       ) {
         throw new Error('Không thể cập nhật: Số lượng giấy không được âm');
       }
-      // Cập nhật thông tin máy in
+      
       const updatedPrinter = await this.printerRepository.update(updated_data, {
-        where: { id: printer.id }, // Đặt điều kiện cho update
+        where: { id: printer.id }, 
       });
-      return updatedPrinter; // Trả về kết quả sau khi cập nhật
+      return updatedPrinter; 
   }
   async delete(deleteCriteria: any) {
       if (!deleteCriteria.id) {
