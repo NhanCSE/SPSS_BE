@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Auth = exports.Payment = exports.User = exports.History = exports.FileOperation = exports.Printer = exports.SystemConfiguration = void 0;
+exports.Auth = exports.Payment = exports.User = exports.HistoryOperation = exports.FileOperation = exports.PrinterOperation = exports.SystemConfiguration = void 0;
 var axios_1 = require("axios");
 var hostURL = "https://localhost:3000/v1";
 var customHeader = function (token) {
@@ -137,11 +137,11 @@ var SystemConfiguration = /** @class */ (function () {
     return SystemConfiguration;
 }());
 exports.SystemConfiguration = SystemConfiguration;
-var Printer = /** @class */ (function () {
-    function Printer() {
+var PrinterOperation = /** @class */ (function () {
+    function PrinterOperation() {
         this.baseUrl = "".concat(hostURL, "/printer");
     }
-    Printer.prototype.createPrinter = function (createPrinterInfo, token) {
+    PrinterOperation.prototype.createPrinter = function (createPrinterInfo, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_4;
             return __generator(this, function (_a) {
@@ -161,14 +161,14 @@ var Printer = /** @class */ (function () {
             });
         });
     };
-    Printer.prototype.searchPrinter = function (token) {
+    PrinterOperation.prototype.searchPrinter = function (searchPayload, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/search"), customHeader(token))];
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/search"), searchPayload, customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -181,14 +181,14 @@ var Printer = /** @class */ (function () {
             });
         });
     };
-    Printer.prototype.updatePaperAfterPrinting = function (updateInfo, token) {
+    PrinterOperation.prototype.printFileCheck = function (printerId, payload, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/update-paper-after-printing"), updateInfo, customHeader(token))];
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/print/check/").concat(printerId), payload, customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -201,14 +201,14 @@ var Printer = /** @class */ (function () {
             });
         });
     };
-    Printer.prototype.updatePrinter = function (updateInfo, token) {
+    PrinterOperation.prototype.printFile = function (printerId, payload, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/update"), updateInfo, customHeader(token))];
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/print/").concat(printerId), payload, customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -221,9 +221,69 @@ var Printer = /** @class */ (function () {
             });
         });
     };
-    Printer.prototype.getNumberOfPrinter = function (payload, token) {
+    PrinterOperation.prototype.searchAvailablePrinter = function (searchAvailableDto, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_8;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/search/available"), searchAvailableDto, customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_8 = _a.sent();
+                        processError(error_8);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterOperation.prototype.updatePaperAfterPrinting = function (updateInfo, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_9;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/update-paper-after-printing"), updateInfo, customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_9 = _a.sent();
+                        processError(error_9);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterOperation.prototype.updatePrinter = function (updateInfo, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_10;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.put("".concat(this.baseUrl, "/update"), updateInfo, customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_10 = _a.sent();
+                        processError(error_10);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterOperation.prototype.getNumberOfPrinter = function (payload, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -239,17 +299,17 @@ var Printer = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_8 = _a.sent();
-                        processError(error_8);
+                        error_11 = _a.sent();
+                        processError(error_11);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    Printer.prototype.getPrinterToPrint = function (payload, token) {
+    PrinterOperation.prototype.getPrinterToPrint = function (payload, token) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_9;
+            var response, error_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -265,17 +325,17 @@ var Printer = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_9 = _a.sent();
-                        processError(error_9);
+                        error_12 = _a.sent();
+                        processError(error_12);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    Printer.prototype.deletePrinter = function (printer_id, token) {
+    PrinterOperation.prototype.deletePrinter = function (printer_id, token) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_10;
+            var response, error_13;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -293,82 +353,6 @@ var Printer = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_10 = _a.sent();
-                        processError(error_10);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return Printer;
-}());
-exports.Printer = Printer;
-var FileOperation = /** @class */ (function () {
-    function FileOperation() {
-        this.baseUrl = "".concat(hostURL, "/file");
-    }
-    FileOperation.prototype.uploadFile = function (fileUpload, printInfo, token) {
-        return __awaiter(this, void 0, void 0, function () {
-            var formData, response, error_11;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        formData = new FormData();
-                        formData.append('file', fileUpload);
-                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl), printInfo, customHeader(token))];
-                    case 1:
-                        response = _a.sent();
-                        return [2 /*return*/, processResponse(response)];
-                    case 2:
-                        error_11 = _a.sent();
-                        processError(error_11);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    FileOperation.prototype.getFile = function (fileId, token) {
-        return __awaiter(this, void 0, void 0, function () {
-            var response, error_12;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/").concat(fileId), customHeader(token))];
-                    case 1:
-                        response = _a.sent();
-                        return [2 /*return*/, processResponse(response)];
-                    case 2:
-                        error_12 = _a.sent();
-                        processError(error_12);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return FileOperation;
-}());
-exports.FileOperation = FileOperation;
-var History = /** @class */ (function () {
-    function History() {
-        this.baseUrl = "".concat(hostURL, "/printingHistory");
-    }
-    History.prototype.viewPrintingHistory = function (student_id, token) {
-        return __awaiter(this, void 0, void 0, function () {
-            var response, error_13;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/view/").concat(student_id), customHeader(token))];
-                    case 1:
-                        response = _a.sent();
-                        return [2 /*return*/, processResponse(response)];
-                    case 2:
                         error_13 = _a.sent();
                         processError(error_13);
                         return [3 /*break*/, 3];
@@ -377,21 +361,23 @@ var History = /** @class */ (function () {
             });
         });
     };
-    return History;
+    return PrinterOperation;
 }());
-exports.History = History;
-var User = /** @class */ (function () {
-    function User() {
-        this.baseUrl = "".concat(hostURL, "/user");
+exports.PrinterOperation = PrinterOperation;
+var FileOperation = /** @class */ (function () {
+    function FileOperation() {
+        this.baseUrl = "".concat(hostURL, "/file");
     }
-    User.prototype.createUser = function (createInfo, token) {
+    FileOperation.prototype.uploadFile = function (fileUpload, token) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_14;
+            var formData, response, error_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/create"), createInfo, customHeader(token))];
+                        formData = new FormData();
+                        formData.append('file', fileUpload);
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl), formData, customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -404,14 +390,14 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.getPaper = function (student_id, token) {
+    FileOperation.prototype.getFile = function (fileId, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_15;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/paper/search/").concat(student_id), customHeader(token))];
+                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/").concat(fileId), customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -424,9 +410,123 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.getInfo = function (student_id, token) {
+    return FileOperation;
+}());
+exports.FileOperation = FileOperation;
+var HistoryOperation = /** @class */ (function () {
+    function HistoryOperation() {
+        this.baseUrl = "".concat(hostURL, "/history/print");
+    }
+    HistoryOperation.prototype.getOne = function (printHistoryId, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_16;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/").concat(printHistoryId), customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_16 = _a.sent();
+                        processError(error_16);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    HistoryOperation.prototype.getPrintingStudentHistory = function (studentId, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_17;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/student/").concat(studentId), customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_17 = _a.sent();
+                        processError(error_17);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    HistoryOperation.prototype.getAll = function (token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_18;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/"), customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_18 = _a.sent();
+                        processError(error_18);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return HistoryOperation;
+}());
+exports.HistoryOperation = HistoryOperation;
+var User = /** @class */ (function () {
+    function User() {
+        this.baseUrl = "".concat(hostURL, "/user");
+    }
+    User.prototype.createUser = function (createInfo, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_19;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/create"), createInfo, customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_19 = _a.sent();
+                        processError(error_19);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    User.prototype.getPaper = function (student_id, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_20;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/paper/search/").concat(student_id), customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_20 = _a.sent();
+                        processError(error_20);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    User.prototype.getInfo = function (student_id, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_21;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -436,8 +536,8 @@ var User = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_16 = _a.sent();
-                        processError(error_16);
+                        error_21 = _a.sent();
+                        processError(error_21);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -453,7 +553,7 @@ var Payment = /** @class */ (function () {
     }
     Payment.prototype.viewPayment = function (student_id, token) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_17;
+            var response, error_22;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -463,8 +563,8 @@ var Payment = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_17 = _a.sent();
-                        processError(error_17);
+                        error_22 = _a.sent();
+                        processError(error_22);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -480,7 +580,7 @@ var Auth = /** @class */ (function () {
     }
     Auth.prototype.login = function (payload) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_18;
+            var response, error_23;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -490,8 +590,8 @@ var Auth = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_18 = _a.sent();
-                        processError(error_18);
+                        error_23 = _a.sent();
+                        processError(error_23);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -500,7 +600,7 @@ var Auth = /** @class */ (function () {
     };
     Auth.prototype.signup = function (createInfo) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_19;
+            var response, error_24;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -510,8 +610,8 @@ var Auth = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_19 = _a.sent();
-                        processError(error_19);
+                        error_24 = _a.sent();
+                        processError(error_24);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

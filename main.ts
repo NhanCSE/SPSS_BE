@@ -1,14 +1,16 @@
 import axios, { AxiosResponse } from 'axios'
 import {
-  createSystemConfigDto,
+  CreateSystemConfigDto,
   CreatePrinterDto,
   UpdatePaperAfterPrintingDto,
   UpdatePrinter,
-  printFileDto,
   CreateUserDto,
   GetCountDto,
   GetPrinterToPrintDto,
-  LoginInfoDto
+  LoginInfoDto,
+  SearchAvailableDto,
+  SearchPayload,
+  PrintFileDto
 } from './interface'
 
 
@@ -54,7 +56,7 @@ export class SystemConfiguration {
     this.baseUrl = `${hostURL}/systemConfiguration`;
   }
 
-  async createSystemConfiguration(createInfo: createSystemConfigDto, token: string) {
+  async createSystemConfiguration(createInfo: CreateSystemConfigDto, token: string) {
     try {
       const response: AxiosResponse = await axios.post(`${this.baseUrl}/create`, createInfo, customHeader(token));
 
@@ -95,7 +97,7 @@ export class SystemConfiguration {
 
 }
 
-export class Printer {
+export class PrinterOperation {
   private baseUrl: string;
   constructor() {
     this.baseUrl = `${hostURL}/printer`
@@ -114,15 +116,51 @@ export class Printer {
   }
 
 
-  async searchPrinter(token: string) {
+  async searchPrinter(searchPayload: SearchPayload, token: string) {
     try {
-      const response: AxiosResponse = await axios.get(`${this.baseUrl}/search`, customHeader(token))
+      const response: AxiosResponse = await axios.post(`${this.baseUrl}/search`, searchPayload, customHeader(token))
 
       return processResponse(response);
     }
     catch (error) {
       processError(error)
 
+    }
+  }
+
+  async printFileCheck(printerId: number, payload: PrintFileDto, token: string) {
+    try {
+      const response: AxiosResponse = await axios.post(`${this.baseUrl}/print/check/${printerId}`, payload, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async printFile(printerId: number, payload: PrintFileDto, token: string) {
+    try {
+      const response: AxiosResponse = await axios.post(`${this.baseUrl}/print/${printerId}`, payload, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+
+  async searchAvailablePrinter(searchAvailableDto: SearchAvailableDto,token: string) {
+    try {
+      const response: AxiosResponse = await axios.post(`${this.baseUrl}/search/available`, searchAvailableDto, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error);
     }
   }
 
@@ -217,12 +255,12 @@ export class FileOperation {
     this.baseUrl = `${hostURL}/file`;
   }
 
-  async uploadFile(fileUpload: File, printInfo: printFileDto, token: string) {
+  async uploadFile(fileUpload: File, token: string) {
     try {
       const formData = new FormData();
       formData.append('file', fileUpload);
 
-      const response: AxiosResponse = await axios.post(`${this.baseUrl}`, printInfo, customHeader(token))
+      const response: AxiosResponse = await axios.post(`${this.baseUrl}`, formData, customHeader(token))
 
       return processResponse(response);
     }
@@ -248,16 +286,43 @@ export class FileOperation {
 
 }
 
-export class History {
+export class HistoryOperation {
   private baseUrl: string;
   constructor() {
-    this.baseUrl = `${hostURL}/printingHistory`;
+    this.baseUrl = `${hostURL}/history/print`;
   }
 
-  async viewPrintingHistory(student_id: string, token: string) {
+  async getOne(printHistoryId: number, token: string) {
     try {
 
-      const response: AxiosResponse = await axios.get(`${this.baseUrl}/view/${student_id}`, customHeader(token))
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/${printHistoryId}`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+
+  async getPrintingStudentHistory(studentId: number, token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/student/${studentId}`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async getAll(token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/`, customHeader(token))
 
       return processResponse(response);
     }
