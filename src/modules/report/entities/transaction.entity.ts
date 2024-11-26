@@ -1,6 +1,4 @@
 
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
 import {
   Table,
   Column,
@@ -13,6 +11,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import { Student } from 'src/modules/user/entities/student.entity';
 
@@ -22,10 +21,10 @@ import { Student } from 'src/modules/user/entities/student.entity';
 })
 export class PaymentTrasaction extends Model<PaymentTrasaction> {
   @PrimaryKey
-  @Default(UUIDV4)
+  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.UUID)
-  transactionId: UUID;
+  @Column(DataType.INTEGER)
+  transactionId: number;
 
   @AllowNull(false)
   @ForeignKey(() => Student)

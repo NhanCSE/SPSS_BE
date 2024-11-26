@@ -1,0 +1,11 @@
+
+
+POST http://localhost:3000/v1/system/config/create
+Content-Type: application/json
+
+{
+    "historyClearTime": "2024-11-30T00:00:00.000Z",
+    "allowedFiles": ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+    "freePaperResetDate": "2024-11-30T00:00:00.000Z",
+    "defaultFreePaper": 50
+}

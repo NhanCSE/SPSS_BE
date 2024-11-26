@@ -1,5 +1,4 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
 import {
   Table,
   Column,
@@ -12,6 +11,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import { Printer } from '../../printer/entities/printer.entity';
 // import { FOREIGNKEYS } from 'sequelize-typescript';
@@ -22,19 +22,19 @@ import { Printer } from '../../printer/entities/printer.entity';
 })
 export class ErrorHistory extends Model<History> {
   @PrimaryKey
-  @Default(UUIDV4)
+  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.UUID)
-  error_id: UUID;
+  @Column(DataType.INTEGER)
+  errorId: number;
 
   @AllowNull(false)
-  @Column(DataType.UUID)
-  studentId: UUID;
+  @Column(DataType.INTEGER)
+  studentId: number;
 
   @AllowNull(false)
   @ForeignKey(() => Printer)
-  @Column(DataType.UUID)
-  printer_id: UUID;
+  @Column(DataType.INTEGER)
+  printerId: number;
 
   @BelongsTo(() => Printer)
   printer: Printer;

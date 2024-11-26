@@ -24,3 +24,9 @@ export enum UserRole {
     ADMIN = "Quản trị viên",
     STUDENT = "Học viên"
 }
+
+export enum FileType {
+    PDF = "application/pdf",
+    DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+}

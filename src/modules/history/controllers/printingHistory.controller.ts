@@ -51,4 +51,39 @@ export class PrintingHistoryController {
             });
         }
     }
+
+
+    @Get('/student/:studentId')
+    async getPrintingStudentHistory(@Param('studentId') studentId: number, @Res() res): Promise<any> {
+        try {
+            const printingHistory = await this.printingHistoryService.getAllByStudentId(studentId);
+            this.response.initResponse(true, 'Get Printing History successfully', printingHistory);
+            return res.status(HttpStatus.OK).json(this.response);
+        } catch (error) {
+            this.logger.error(error.message, error.stack);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
+
+    @Get('')
+    async getAllPrintingHistory(@Res() res): Promise<any> {
+        try {
+            const printingHistory = await this.printingHistoryService.getAllPrintingHistory();
+            if (!printingHistory) {
+                this.response.initResponse(false, 'Not found history', null);
+                return res.status(HttpStatus.NOT_FOUND).json(this.response);
+            }
+            this.response.initResponse(true, 'Get Printing History successfully', printingHistory);
+            return res.status(HttpStatus.OK).json(this.response);
+        } catch (error) {
+            this.logger.error(error.message, error.stack);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 }

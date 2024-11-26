@@ -1,8 +1,9 @@
+
+
 import { IsString, IsInt, IsDate, Min, IsIn } from 'class-validator';
 
-export class CreatePrintingHistoryDto {
+export class UploadFileDto {
 
-  studentId: number;
 
   @IsInt()
   printerId: number;
@@ -13,10 +14,6 @@ export class CreatePrintingHistoryDto {
 
   @IsInt()
   fileId: number;
-
-  @IsInt()
-  @Min(1)
-  pagePrint: number;
 
   @IsDate()
   date: Date;

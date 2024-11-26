@@ -1,106 +1,108 @@
-import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFile, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFile, Res, HttpStatus, ParseIntPipe, BadRequestException, UseGuards, Req } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as pdfParse from 'pdf-parse';
+import { Document, Packer, Paragraph } from 'docx';
+import * as XLSX from 'xlsx';
 import { FileService } from '../services/file.service';
-import { PrintingHistoryService } from 'src/modules/history/services/printingHistory.service';
-import { CreatePrintingHistoryDto } from 'src/modules/history/dto/printingHistory.dto';
-import { Printer } from 'src/modules/printer/entities/printer.entity';
 import { Response } from 'src/modules/response/response.entity';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { UploadFileDto } from '../dto/upload-file.dto';
+import { SystemConfigurationService } from 'src/modules/system/services/system.service';
+import { FileType } from 'src/common/contants';
+import { JwtAuthGuard } from 'src/common/guards/authenticate.guard';
 
 @Controller('file')
 export class FileController {
     constructor(
-        private readonly printFileService: FileService,
-        private readonly printingHistoryService: PrintingHistoryService,
+        private readonly fileService: FileService,
+        private readonly systemConfigurationService: SystemConfigurationService,
         private readonly response: Response,
         private readonly logger: LoggerService,
     ) { }
 
-    @Post() // curl.exe -X POST -H "Content-Type: multipart/form-data" -F "studentId=567495c7-da94-4da1-9b82-f7ec3587339a" -F "printer_id=6f4dee97-386c-4caf-aeff-b8fd50e6e18b" -F "copies=3" -F "fileId=977932ce-d1a3-4b31-976e-cb5388184243" -F "page_print=5" -F "date=2024-11-19T10:00:00Z" -F "paper_size=A4" -F "file=@C:\Users\hocho\Desktop\tuần 39 - cđ2 - lsđ.docx" http://localhost:3000/v1/file
-    @UseInterceptors(FileInterceptor('file', { dest: '../storage' }))
-    async uploadFile(@Body() fileData: CreatePrintingHistoryDto, @UploadedFile() file: Express.Multer.File, @Res() res): Promise<any> {
+    @Post('/upload') 
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(FileInterceptor('file', { dest: './src/modules/file/storage/temp' }))
+    async uploadFile(@Req() req, 
+                    @UploadedFile() file: Express.Multer.File, 
+                    @Res() res) {
         try {
-            const printer = await Printer.findByPk(fileData.printer_id);
-            if (!printer) {
-                this.response.initResponse(false, 'Printer not found', false);
-                return res.status(HttpStatus.NOT_FOUND).json(this.response);
+            
+            if(!file) {
+                throw new BadRequestException("Empty File!");
             }
 
-            if (!printer.status) {
-                this.response.initResponse(false, 'Printer is currently unavailable', false);
-                return res.status(HttpStatus.NOT_FOUND).json(this.response);
+            const studentId = req.user.id;
+            console.log(file.path)
+            const allowedFilesList: FileType[] = (await this.systemConfigurationService.searchNewest()).allowedFiles;
+            const { mimetype } = file;
+
+            const isFileTypeValid = Object.values(FileType).includes(mimetype as FileType);
+            if(!isFileTypeValid || !allowedFilesList.includes(mimetype as FileType)) {
+                throw new BadRequestException("Inapropriate File type!");
             }
 
-            const paperRequired = fileData.page_print * fileData.copies;
+            let pageCount = 0;
 
-            switch (fileData.paper_size) {
-                case 'A4':
-                    if (printer.A4PaperCount < paperRequired) {
-                        this.response.initResponse(false, 'Not enough A4 paper available in the printer', false);
-                        return res.status(HttpStatus.CONFLICT).json(this.response);
-                    }
-                    printer.A4PaperCount -= paperRequired;
-                    break;
-                case 'A3':
-                    if (printer.A3PaperCount < paperRequired) {
-                        this.response.initResponse(false, 'Not enough A3 paper available in the printer', false);
-                        return res.status(HttpStatus.CONFLICT).json(this.response);
-                    }
-                    printer.A3PaperCount -= paperRequired;
-                    break;
-                case 'A5':
-                    if (printer.A5PaperCount < paperRequired) {
-                        this.response.initResponse(false, 'Not enough A5 paper available in the printer', false);
-                        return res.status(HttpStatus.CONFLICT).json(this.response);
-                    }
-                    printer.A5PaperCount -= paperRequired;
-                    break;
-                default:
-                    this.response.initResponse(false, 'Invalid type of paper', false);
-                    return res.status(HttpStatus.CONFLICT).json(this.response);
+            if (mimetype === 'application/pdf') {
+                // Handle PDF files
+                const fileBuffer = fs.readFileSync(file.path);
+                const pdfData = await pdfParse(fileBuffer);
+                pageCount = pdfData.numpages;
+            } else if (mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                // Handle DOCX files
+                const docBuffer = fs.readFileSync(file.path);
+                pageCount = Math.ceil(docBuffer.toString().length / 1000);
+            } else if ( mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                // Handle Excel files
+                const workbook = XLSX.readFile(file.path);
+                pageCount = workbook.SheetNames.length; 
+            } else {
+                throw new BadRequestException("Inapropriate File type!");
             }
+            
 
-            await printer.save();
+            
 
-            const storageDir = 'storage';
+            const fileData = {
+                filename: file.originalname,
+                type: file.mimetype as FileType,
+                timeUploaded: new Date(),
+                size: file.size,
+                pageCount,
+                studentId: studentId,
+            };
+            const newFile = await this.fileService.setFile(fileData);
+
+            const storageDir = './src/modules/file/storage/processed';
             if (!fs.existsSync(storageDir)) {
                 fs.mkdirSync(storageDir, { recursive: true });
             }
-            const filePath = path.join('../storage', file.originalname);
+            const filePath = path.join(storageDir, `${file.originalname}`);
             fs.renameSync(file.path, filePath);
 
-            const file_data = {
-                filename: file.originalname,
-                type: file.mimetype,
-                timeUploaded: new Date(),
-                size: file.size,
-                studentId: fileData.studentId,
-            };
-            const newFile = await this.printFileService.setFile(file_data);
-
-            const printingHistoryData = {
-                ...fileData,
-                filename: newFile.filename,
-            };
-
-            const newPrintingHistory = await this.printingHistoryService.createPrintingHistory(printingHistoryData);
-            this.response.initResponse(true, 'Upload File successfully', true);
+            this.response.initResponse(true, 'Upload File successfully', newFile);
             return res.status(HttpStatus.OK).json(this.response);
         } catch (error) {
             this.logger.error(error.message, error.stack);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: error.message,
-            });
+
+            if(error instanceof BadRequestException) {
+                this.response.initResponse(false, error.message, null);
+                return res.status(HttpStatus.BAD_REQUEST).json(this.response);
+            }
+
+            this.response.initResponse(false, 'Internal Server Error', null);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+
         }
     }
 
     @Get(':fileID')
-    async getFile(@Param('fileID') fileID: string, @Res() res): Promise<any> {
+    async getFile(@Param('fileID', ParseIntPipe) fileID: number, @Res() res): Promise<any> {
         try {
-            const file = await this.printFileService.getFile(fileID);
+            const file = await this.fileService.findOneById(fileID);
             this.response.initResponse(true, 'Get File successfully', file);
             return res.status(HttpStatus.CONFLICT).json(this.response);
         } catch (error) {

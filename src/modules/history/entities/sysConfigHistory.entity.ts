@@ -1,5 +1,4 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
 import {
   Table,
   Column,
@@ -26,12 +25,12 @@ export class SysConfigHistory extends Model<SysConfigHistory> {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  history_id: Number;
+  historyId: Number;
 
   @AllowNull(false)
   @ForeignKey(() => Admin)
   @Column(DataType.INTEGER)
-  spso_id: number;
+  spsoId: number;
 
   @BelongsTo(() => Admin)
   admin: Admin;
@@ -51,7 +50,7 @@ export class SysConfigHistory extends Model<SysConfigHistory> {
   @AllowNull(false)
   @ForeignKey(() => SystemConfiguration)
   @Column(DataType.INTEGER)
-  version_id: number
+  versionId: number
 
   @BelongsTo(() => SystemConfiguration)
   configuration: SystemConfiguration;

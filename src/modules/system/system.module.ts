@@ -13,5 +13,6 @@ import { SystemConfigurationService } from './services/system.service';
   imports: [DatabaseModule, LoggerModule, ResponseModule],
   controllers: [SystemConfigurationController],
   providers: [...SystemProvider, SystemConfigurationService],
+  exports: [SystemConfigurationService]
 })
 export class SystemConfigurationModule { }

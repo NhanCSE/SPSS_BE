@@ -1,5 +1,4 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
 import {
   Table,
   Column,
@@ -12,6 +11,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import { Printer } from '../../printer/entities/printer.entity';
 // import { FOREIGNKEYS } from 'sequelize-typescript';
@@ -22,10 +22,10 @@ import { Printer } from '../../printer/entities/printer.entity';
 })
 export class PrintingHistory extends Model<PrintingHistory> {
   @PrimaryKey
-  @Default(UUIDV4)
+  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.UUID)
-  printingId: UUID;
+  @Column(DataType.INTEGER)
+  printingId: number;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
@@ -33,8 +33,8 @@ export class PrintingHistory extends Model<PrintingHistory> {
 
   @AllowNull(false)
   @ForeignKey(() => Printer)
-  @Column(DataType.UUID)
-  printer_id: UUID;
+  @Column(DataType.INTEGER)
+  printerId: number;
 
   @BelongsTo(() => Printer)
   printer: Printer;
@@ -44,12 +44,12 @@ export class PrintingHistory extends Model<PrintingHistory> {
   copies: number;
 
   @AllowNull(false)
-  @Column(DataType.UUID)
-  fileId: UUID;
+  @Column(DataType.INTEGER)
+  fileId: number;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-  page_print: number;
+  pagePrint: number;
 
   @AllowNull(false)
   @Column(DataType.STRING)
@@ -61,6 +61,6 @@ export class PrintingHistory extends Model<PrintingHistory> {
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  page_size: string;
+  pageSize: string;
 
 }

@@ -11,6 +11,7 @@ import {
   Req,
   Res,
   Query,
+  Param,
 } from '@nestjs/common';
 import { Response } from 'src/modules/response/response.entity';
 import { PrinterService } from '../services/printer.service';
@@ -18,6 +19,9 @@ import { CreatePrinterDto } from '../dtos/create-printer.dtos';
 import { UpdatePrinterDto } from '../dtos/update-printer.dtos';
 import { UpdatePaperAfterPrintingDto } from '../dtos/update-paper-after-printing.dtos';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { SearchAvailableDto } from '../dtos/search-available.dtos';
+import { SearchPayload } from 'src/common/interfaces/search_payload.interface';
+import { PrintFileDto } from '../dtos/print-file.dtos';
 
 @Controller('printer')
 export class PrinterController {
@@ -53,21 +57,28 @@ export class PrinterController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
-  //Sử dụng cho admin quản lý thông tin máy in
-  //Nếu sort chỉnh sửa lần cuối: chỉ thêm trường "lastUpdate": true, (default)
-  //Nếu sort chỉnh sửa lần đầu: chỉ thêm trường "lastUpdate": false,
-  @Get('search')
-  async search(@Query() query, @Res() res) {
+  
+  @Post('search')
+  async search(@Body() searchPayload: SearchPayload, @Res() res) {
     try {
-      // Lấy các query parameters từ request (ví dụ: ?brand=HP&model=HP100)
-      const searchCriteria = query;
-
-      // Tìm kiếm máy in theo các tham số
-      const printers = await this.printerService.search(searchCriteria);
-      if (printers.length == 0) {
-        this.response.initResponse(false, 'Không tìm thấy máy in', null);
-        return res.status(HttpStatus.NOT_FOUND).json(this.response);
-      }
+      const printers = await this.printerService.search(searchPayload);
+      this.response.initResponse(true, 'Tìm kiếm thành công', printers);
+      return res.status(HttpStatus.OK).json(this.response);
+    } catch (error) {
+      console.log(error.message);
+      this.response.initResponse(
+        false,
+        'Đã xảy ra lỗi. Vui lòng thử lại',
+        null,
+      );
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+  
+  @Post('search/available')
+  async searchAvailable(@Req() req, @Body() criteria: SearchAvailableDto, @Res() res) {
+    try {
+      const printers = await this.printerService.searchAvailable(criteria);
       this.response.initResponse(true, 'Tìm kiếm thành công', printers);
       return res.status(HttpStatus.OK).json(this.response);
     } catch (error) {
@@ -79,21 +90,42 @@ export class PrinterController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
-  //Sử dụng khi tìm máy in thỏa mãn số trang in của sinh viên
-  @Get('searchToPrint')
-  async searchToPrint(@Query() query, @Res() res) {
-    try {
-      // Lấy các query parameters từ request (ví dụ: ?brand=HP&model=HP100)
-      const searchCriteria = query;
 
-      // Tìm kiếm máy in theo các tham số
-      const printers = await this.printerService.searchToPrint(searchCriteria);
-      if (printers.length == 0) {
-        this.response.initResponse(false, 'Không tìm thấy máy in', null);
-        return res.status(HttpStatus.NOT_FOUND).json(this.response);
-      }
+  @Post('/print/:printerId')
+  async printFile(@Req() req, @Param('printerId') printerId: number, @Body() payload: PrintFileDto, @Res() res) {
+    try {
+
+      // const studentId = req.user.id;
+      const studentId = 1;
+
+
+      const printers = await this.printerService.printFile(printerId, studentId, payload);
       this.response.initResponse(true, 'Tìm kiếm thành công', printers);
       return res.status(HttpStatus.OK).json(this.response);
+
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      this.response.initResponse(
+        false,
+        'Đã xảy ra lỗi. Vui lòng thử lại',
+        null,
+      );
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+
+  @Post('/print/check/:printerId')
+  async printFileCheck(@Req() req, @Param('printerId') printerId: number, @Body() payload: PrintFileDto, @Res() res) {
+    try {
+
+      // const studentId = req.user.id;
+      const studentId = 1;
+
+
+      const printers = await this.printerService.printFileCheck(printerId, studentId, payload);
+      this.response.initResponse(true, 'Tìm kiếm thành công', printers);
+      return res.status(HttpStatus.OK).json(this.response);
+      
     } catch (error) {
       this.response.initResponse(
         false,
@@ -103,6 +135,7 @@ export class PrinterController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
+
   //Đếm số lượng máy in thỏa mãn yêu cầu
   @Get('count')
   async count(@Query() query, @Res() res) {

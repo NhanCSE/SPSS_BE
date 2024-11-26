@@ -1,5 +1,4 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
 import {
   Table,
   Column,
@@ -12,6 +11,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
 
 @Table({
@@ -19,10 +19,10 @@ import {
 })
 export class PaymentReport extends Model<PaymentReport> {
     @PrimaryKey
-    @Default(UUIDV4)
+    @AutoIncrement
     @AllowNull(false)
-    @Column(DataType.UUID)
-    reportId: UUID;
+    @Column(DataType.INTEGER)
+    reportId: number;
 
 
     @AllowNull(false)

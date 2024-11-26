@@ -12,3 +12,95 @@ Content-Type: application/json
     "brand": "HP",
     "model": "HP101"
 }
+
+###
+
+POST http://localhost:3000/v1/printer/create
+Content-Type: application/json
+
+{
+    "status": false,
+    "A3PaperCount": 200,
+    "A4PaperCount": 200,
+    "A5PaperCount": 200,
+    "building": "H1",
+    "floor": 2,
+    "room": 202,
+    "brand": "LP",
+    "model": "LP101"
+}
+
+
+###
+
+POST http://localhost:3000/v1/printer/search/available
+Content-Type: application/json
+
+{
+    "A3Require": 145,
+    "A4Require": 39,
+    "A5Require": 56
+}
+
+###
+
+POST http://localhost:3000/v1/printer/search/
+Content-Type: application/json
+
+{
+   "criteria": [
+    {
+        "field": "Location.id",
+        "operator": "=",
+        "value": 2
+    }
+   ],
+   "addition": ""
+}
+
+
+###
+
+POST http://localhost:3000/v1/printer/print/check/1
+Content-Type: application/json
+
+{
+   "printDataList": [
+        {
+            "fileId": 2,
+            "pageSize": "A4",
+            "copies": 2
+        },
+        {
+            "fileId": 4,
+            "pageSize": "A5",
+            "copies": 2
+        },
+        {
+            "fileId": 6,
+            "pageSize": "A5",
+            "copies": 1000
+        }
+   ]
+}
+
+
+###
+
+POST http://localhost:3000/v1/printer/print/1
+Content-Type: application/json
+
+{
+   "printDataList": [
+        {
+            "fileId": 2,
+            "pageSize": "A4",
+            "copies": 2
+        },
+        {
+            "fileId": 4,
+            "pageSize": "A5",
+            "copies": 2
+        }
+   ]
+}

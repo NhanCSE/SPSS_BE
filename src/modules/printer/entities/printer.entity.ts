@@ -1,5 +1,5 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
+
 import {
   Table,
   Column,
@@ -12,6 +12,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import { Location } from './location.entity';
 
@@ -20,10 +21,10 @@ import { Location } from './location.entity';
 })
 export class Printer extends Model<Printer> {
   @PrimaryKey
-  @Default(UUIDV4)
+  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.UUID)
-  id: UUID;
+  @Column(DataType.INTEGER)
+  id: number;
 
   @Default(true)
   @Column(DataType.BOOLEAN)
@@ -42,8 +43,8 @@ export class Printer extends Model<Printer> {
   A5PaperCount: number;
 
   @ForeignKey(() => Location)
-  @Column(DataType.UUID)
-  locationId: UUID;
+  @Column(DataType.INTEGER)
+  locationId: number;
 
   @BelongsTo(() => Location)
   location: Location;

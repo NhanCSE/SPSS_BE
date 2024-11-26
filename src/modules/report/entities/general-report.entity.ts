@@ -1,6 +1,5 @@
 
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
 import {
   Table,
   Column,
@@ -13,6 +12,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
 
 
@@ -21,10 +21,10 @@ import {
 })
 export class GeneralPaperReport extends Model<GeneralPaperReport> {
   @PrimaryKey
-  @Default(UUIDV4)
+  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.UUID)
-  reportId: UUID;
+  @Column(DataType.INTEGER)
+  reportId: number;
 
   @AllowNull(false)
   @Column(DataType.DATE)

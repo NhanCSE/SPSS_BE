@@ -1,5 +1,4 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
 import {
   Table,
   Column,
@@ -14,6 +13,7 @@ import {
   BelongsTo,
   AutoIncrement,
 } from 'sequelize-typescript';
+import { FileType } from 'src/common/contants';
 
 
 @Table({
@@ -34,9 +34,11 @@ export class SystemConfiguration extends Model<SystemConfiguration> {
   @Column(DataType.DATE)
   historyClearTime: Date;
 
-  @Default(['PDF'])
-  @Column(DataType.JSON)
-  allowedFiles: string[];
+  @Default([FileType.PDF])
+  @Column({
+    type: DataType.JSON
+  })
+  allowedFiles: FileType[];
 
   @Default(() => {
     const date = new Date();

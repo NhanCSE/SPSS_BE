@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   LOCATION_REPOSITORY,
   PRINTER_REPOSITORY,
@@ -9,18 +9,28 @@ import { CreatePrinterDto } from '../dtos/create-printer.dtos';
 import { UpdatePrinterDto } from '../dtos/update-printer.dtos';
 import { UpdatePaperAfterPrintingDto } from '../dtos/update-paper-after-printing.dtos';
 import { Location } from '../entities/location.entity';
-import { Sequelize, QueryTypes } from 'sequelize';
+import { Sequelize, QueryTypes, Op } from 'sequelize';
+import { SearchAvailableDto } from '../dtos/search-available.dtos';
+import { SearchPayload } from 'src/common/interfaces/search_payload.interface';
+import { findByCriteria } from 'src/common/utils/find_by_criteria.util';
+import { PrintFileDto } from '../dtos/print-file.dtos';
+import { UserService } from 'src/modules/user/services/user.service';
+import { ListResponse } from '../interfaces/list-response.interface';
+import { FileService } from 'src/modules/file/services/file.service';
+import { CreatePrintingHistoryDto } from 'src/modules/history/dto/printingHistory.dto';
+import { PrintingHistoryService } from 'src/modules/history/services/printingHistory.service';
+
 // import { DataSource } from 'typeorm';
 // import { InjectDataSource } from '@nestjs/typeorm';
 
 @Injectable()
 export class PrinterService {
   constructor(
-    @Inject(SEQUELIZE) private readonly sequelize: typeof Sequelize,
-    @Inject(PRINTER_REPOSITORY)
-    private readonly printerRepository: typeof Printer,
-    @Inject(LOCATION_REPOSITORY)
-    private readonly locationRepository: typeof Location,
+    @Inject(PRINTER_REPOSITORY) private readonly printerRepository: typeof Printer,
+    @Inject(LOCATION_REPOSITORY) private readonly locationRepository: typeof Location,
+    private readonly userService: UserService,
+    private readonly fileService: FileService,
+    private readonly printingHistoryService: PrintingHistoryService
   ) {}
 
   async create(payload: CreatePrinterDto) {
@@ -50,190 +60,18 @@ export class PrinterService {
 
     return printer;
   }
-  async search(searchCriteria: any) {
-      const validFields = [
-        'id',
-        'status',
-        'A3PaperCount',
-        'A4PaperCount',
-        'A5PaperCount',
-        'brand',
-        'model',
-        'building',
-        'floor',
-        'room',
-        'lastUpdate',
-      ];
-      // Kiểm tra xem có trường nào không hợp lệ không
-      const invalidFields = Object.keys(searchCriteria).filter(
-        (key) => !validFields.includes(key),
-      );
-      if (invalidFields.length > 0) {
-        throw new Error(`Trường không hợp lệ: ${invalidFields.join(', ')}`);
-      }
-      let sql = `
-        SELECT 
-          printers.id,
-          printers.status,
-          printers.A3PaperCount,
-          printers.A4PaperCount,
-          printers.A5PaperCount,
-          printers.brand,
-          printers.model,
-          printers.createdAt,
-          printers.updatedAt,
-          locations.building,
-          locations.floor,
-          locations.room
-        FROM printers
-        JOIN locations ON printers.locationId = locations.id
-      `;
-      const whereClauses: string[] = [];
-      const replacements: any[] = [];
 
-      // Thêm điều kiện WHERE cho các tham số tìm kiếm
-      if (searchCriteria.building) {
-        whereClauses.push('locations.building = ?');
-        replacements.push(searchCriteria.building);
-      }
-      if (searchCriteria.floor) {
-        whereClauses.push('locations.floor = ?');
-        replacements.push(searchCriteria.floor);
-      }
-      if (searchCriteria.room) {
-        whereClauses.push('locations.room = ?');
-        replacements.push(searchCriteria.room);
-      }
-      if (searchCriteria.brand) {
-        whereClauses.push('printers.brand = ?');
-        replacements.push(searchCriteria.brand);
-      }
-      if (searchCriteria.status) {
-        whereClauses.push('printers.status = ?');
-        replacements.push(searchCriteria.status);
-      }
-      if (searchCriteria.model) {
-        whereClauses.push('printers.model =?');
-        replacements.push(searchCriteria.model);
-      }
-      if (searchCriteria.A3PaperCount) {
-        whereClauses.push('printers.A3PaperCount = ?');
-        replacements.push(Number(searchCriteria.A3PaperCount));
-      }
-      if (searchCriteria.A4PaperCount) {
-        whereClauses.push('printers.A4PaperCount = ?');
-        replacements.push(Number(searchCriteria.A4PaperCount));
-      }
-      if (searchCriteria.A5PaperCount) {
-        whereClauses.push('printers.A5PaperCount = ?');
-        replacements.push(Number(searchCriteria.A5PaperCount));
-      }
-      // Nếu có điều kiện WHERE, thêm vào câu lệnh SQL
-      if (whereClauses.length > 0) {
-        sql += ' WHERE ' + whereClauses.join(' AND ');
-      }
-
-      if( searchCriteria.lastUpdate == 'false') {
-        sql += 'ORDER BY printers.updatedAt ASC';
-      } else {
-        sql += 'ORDER BY printers.updatedAt DESC';
-      }
-
-      sql += ';';
-
-      const [results] = await this.printerRepository.sequelize.query(sql, {
-        replacements,
-        type: QueryTypes.RAW,
-      });
-      return results;
+  async findOneById(id: number) {
+    return await this.printerRepository.findByPk(id);
   }
-  async searchToPrint(searchCriteria: any) {
-      const validFields = [
-        'id',
-        'status',
-        'A3PaperCount',
-        'A4PaperCount',
-        'A5PaperCount',
-        'brand',
-        'model',
-        'building',
-        'floor',
-        'room',
-      ];
-      // Kiểm tra xem có trường nào không hợp lệ không
-      const invalidFields = Object.keys(searchCriteria).filter(
-        (key) => !validFields.includes(key),
-      );
-      if (invalidFields.length > 0) {
-        throw new Error(`Trường không hợp lệ: ${invalidFields.join(', ')}`);
-      }
-      let sql = `
-        SELECT 
-          printers.id,
-          printers.status,
-          printers.A3PaperCount,
-          printers.A4PaperCount,
-          printers.A5PaperCount,
-          printers.brand,
-          printers.model,
-          locations.building,
-          locations.floor,
-          locations.room
-        FROM printers
-        JOIN locations ON printers.locationId = locations.id
-      `;
-      const whereClauses: string[] = [];
-      const replacements: any[] = [];
 
-      // Thêm điều kiện WHERE cho các tham số tìm kiếm
-      if (searchCriteria.building) {
-        whereClauses.push('locations.building = ?');
-        replacements.push(searchCriteria.building);
-      }
-      if (searchCriteria.floor) {
-        whereClauses.push('locations.floor = ?');
-        replacements.push(searchCriteria.floor);
-      }
-      if (searchCriteria.room) {
-        whereClauses.push('locations.room = ?');
-        replacements.push(searchCriteria.room);
-      }
-      if (searchCriteria.brand) {
-        whereClauses.push('printers.brand = ?');
-        replacements.push(searchCriteria.brand);
-      }
-      if (searchCriteria.status) {
-        whereClauses.push('printers.status = ?');
-        replacements.push(searchCriteria.status);
-      }
-      if (searchCriteria.model) {
-        whereClauses.push('printers.model =?');
-        replacements.push(searchCriteria.model);
-      }
-      if (searchCriteria.A3PaperCount) {
-        whereClauses.push('printers.A3PaperCount >= ?');
-        replacements.push(Number(searchCriteria.A3PaperCount));
-      }
-      if (searchCriteria.A4PaperCount) {
-        whereClauses.push('printers.A4PaperCount >= ?');
-        replacements.push(Number(searchCriteria.A4PaperCount));
-      }
-      if (searchCriteria.A5PaperCount) {
-        whereClauses.push('printers.A5PaperCount >= ?');
-        replacements.push(Number(searchCriteria.A5PaperCount));
-      }
-      // Nếu có điều kiện WHERE, thêm vào câu lệnh SQL
-      if (whereClauses.length > 0) {
-        sql += ' WHERE ' + whereClauses.join(' AND ');
-      }
-      sql += ';';
-
-      const [results] = await this.printerRepository.sequelize.query(sql, {
-        replacements,
-        type: QueryTypes.RAW,
-      });
-      return results;
+  async search(searchPayload: SearchPayload) {
+      return await findByCriteria(searchPayload.criteria, Printer, searchPayload.addition, {
+        option: 'manual',
+        includeOption: [{model: Location}]
+    }, null);
   }
+  
   async count(searchCriteria: any) {
       const validFields = [
         'id',
@@ -321,7 +159,7 @@ export class PrinterService {
       });
       return results.length;
   }
-  async update(id: string, updatePrinterDto: UpdatePrinterDto) {
+  async update(id: number, updatePrinterDto: UpdatePrinterDto) {
       const validFields = [
         'id',
         'status',
@@ -418,7 +256,7 @@ export class PrinterService {
 
       return updatedPrinter; // Trả về kết quả sau khi cập nhật
   }
-  async updatePaper(id: string, updatePaper: UpdatePaperAfterPrintingDto) {
+  async updatePaper(id: number, updatePaper: UpdatePaperAfterPrintingDto) {
       const validFields = [
         'id',
         'A3PaperCount',
@@ -480,5 +318,133 @@ export class PrinterService {
         });
       }
       return 3;
-    } 
+  }  
+
+  async searchAvailable(searchAvailableDto: SearchAvailableDto) {
+    return await this.printerRepository.findAll({ 
+      where: {
+        A3PaperCount: { [Op.gte]: searchAvailableDto.A3Require }, 
+        A4PaperCount: { [Op.gte]: searchAvailableDto.A4Require }, 
+        A5PaperCount: { [Op.gte]: searchAvailableDto.A5Require }, 
+        status: false
+      },
+      include: [Location]
+    });
+  }
+
+  async printFileCheck(printerId: number, studentId: number, printFileDto: PrintFileDto) {
+    const printer = await this.printerRepository.findByPk(printerId);
+    if(!printer) {
+      throw new NotFoundException("Printer Not Found");
+    }
+
+    const student = (await this.userService.findOneStudentById(studentId)).student;
+    if(!student) {
+      throw new NotFoundException("Printer Not Found");
+    }
+
+    const studentBalancedPage = student.boughtPaper + student.currentFreePaper;
+
+    let listResponse: ListResponse = {
+      acceptedList: [],
+      unAcceptedList: []
+    };
+
+    let A3used = 0, A4used = 0, A5used = 0;
+
+    for(const fileData of printFileDto.printDataList) {
+
+      const file = await this.fileService.findOneById(fileData.fileId);
+      if(!file) {
+        listResponse.unAcceptedList.push(fileData.fileId);
+        continue;
+      }
+
+      if(fileData.pageSize === "A3") {
+        A3used += (file.pageCount * fileData.copies);
+      } else if(fileData.pageSize === "A4") {
+        A4used += (file.pageCount * fileData.copies);
+      } else if(fileData.pageSize === "A5") {
+        A5used += (file.pageCount * fileData.copies);
+      } else {
+        listResponse.unAcceptedList.push(fileData.fileId);
+        continue;
+      }
+
+      if(printer.A3PaperCount < A3used || printer.A4PaperCount < A4used || printer.A5PaperCount < A5used) {
+        listResponse.unAcceptedList.push(fileData.fileId);
+        continue;
+      }
+
+      
+      if(studentBalancedPage < (A3used + A4used + A5used)) {
+        listResponse.unAcceptedList.push(fileData.fileId);
+        continue;
+      }
+      listResponse.acceptedList.push(fileData.fileId);
+
+    }
+    return listResponse;
+  }
+
+  async printFile(printerId: number, studentId: number, printFileDto: PrintFileDto) {
+    const printer = await this.printerRepository.findByPk(printerId);
+    if(!printer) {
+      throw new NotFoundException("Printer Not Found");
+    }
+
+    const student = (await this.userService.findOneStudentById(studentId)).student;
+    if(!student) {
+      throw new NotFoundException("Printer Not Found");
+    }
+
+    //Block printer
+    printer.status = true;
+    await printer.save()
+
+    console.log("Start Printing on printer ", printerId);
+
+    const listResponse = await this.printFileCheck(printerId, studentId, printFileDto);
+    for(const fileData of printFileDto.printDataList) {
+      console.log("Start Printing file ", fileData.fileId);
+      if(!listResponse.acceptedList.includes(fileData.fileId)) { continue; }
+      const file = await this.fileService.findOneById(fileData.fileId);
+
+      if(fileData.pageSize === "A3") {
+        printer.A3PaperCount -= (file.pageCount * fileData.copies);
+      } else if(fileData.pageSize === "A4") {
+        printer.A4PaperCount -= (file.pageCount * fileData.copies);
+      } else if(fileData.pageSize === "A5") {
+        printer.A4PaperCount -= (file.pageCount * fileData.copies);
+      } else {
+        console.log("Printing Failed file ", fileData.fileId);
+        continue;
+      }
+
+      await printer.save();
+      await this.userService.decreasePage(studentId, (file.pageCount * fileData.copies));
+
+      const printingHistory: CreatePrintingHistoryDto = {
+        studentId: studentId,
+        printerId: printerId,
+        copies: fileData.copies,
+        fileId: file.fileId,
+        pagePrint: (file.pageCount * fileData.copies),
+        date: new Date(),
+        pageSize: fileData.pageSize,
+        filename: file.filename
+      }
+      console.log(printingHistory)
+      await this.printingHistoryService.createPrintingHistory(printingHistory);
+
+      console.log("Printing Successfully file ", fileData.fileId);
+
+    }
+    console.log("Done Printing file on Printer ", printerId);
+
+    //Unlock printer
+    printer.status = false;
+    await printer.save()
+  }
+
 }

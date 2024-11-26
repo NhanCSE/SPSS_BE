@@ -2,12 +2,12 @@ import {
     IsOptional,
     IsString,
     IsInt,
-    IsUUID,
     IsDate,
     IsArray,
     ArrayNotEmpty,
     IsNumber,
   } from 'class-validator';
+import { FileType } from 'src/common/contants';
   
   export class CreateSystemConfigDto {
     @IsOptional()
@@ -17,7 +17,7 @@ import {
     @IsOptional()
     @IsArray()
     @ArrayNotEmpty()
-    allowedFiles: string[];
+    allowedFiles: FileType[];
 
     @IsOptional()
     @IsDate()
@@ -25,12 +25,11 @@ import {
 
     
     @IsNumber()
-    defaultPaper: number;
+    defaultFreePaper: number;
   }
   export class UpdateSystemConfigDto {
-    @IsUUID()
-    @IsString()
-    versionId: string;
+    @IsInt()
+    versionId: number;
 
     @IsOptional()
     @IsDate()

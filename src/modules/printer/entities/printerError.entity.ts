@@ -1,5 +1,4 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
+
 import {
   Table,
   Column,
@@ -24,8 +23,8 @@ export class PrinterError extends Model<PrinterError> {
   @PrimaryKey
   @AllowNull(false)
   @ForeignKey(() => Printer)
-  @Column(DataType.UUID)
-  printer_id: UUID;
+  @Column(DataType.INTEGER)
+  printerId: number;
 
   @BelongsTo(() => Printer)
   printer: Printer;
@@ -33,8 +32,8 @@ export class PrinterError extends Model<PrinterError> {
   @PrimaryKey
   @AllowNull(false)
   @ForeignKey(() => ErrorHistory)
-  @Column(DataType.UUID)
-  Error_ID: UUID;
+  @Column(DataType.INTEGER)
+  errorId: number;
 
   @BelongsTo(() => ErrorHistory)
   error: ErrorHistory;

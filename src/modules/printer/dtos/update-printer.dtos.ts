@@ -2,13 +2,12 @@ import {
     IsOptional,
     IsString,
     IsInt,
-    IsUUID,
     IsBoolean,
 } from 'class-validator';
   
 export class UpdatePrinterDto {
-    @IsUUID()
-    id: string;
+    @IsInt()
+    id: number;
   
     @IsOptional()
     @IsBoolean()

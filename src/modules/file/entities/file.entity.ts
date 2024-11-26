@@ -1,5 +1,3 @@
-import { UUID } from 'crypto';
-import { UUIDV4 } from 'sequelize';
 import {
   Table,
   Column,
@@ -12,12 +10,10 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AutoIncrement,
 } from 'sequelize-typescript';
+import { FileType } from 'src/common/contants';
 import { Student } from 'src/modules/user/entities/student.entity';
-
-enum FileType {
-
-}
 
 
 @Table({
@@ -25,18 +21,25 @@ enum FileType {
 })
 export class File extends Model<File> {
   @PrimaryKey
-  @Default(UUIDV4)
+  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.UUID)
-  fileId: UUID;
+  @Column(DataType.INTEGER)
+  fileId: number;
 
   @AllowNull(false)
   @Column(DataType.STRING)
   filename: string;
 
   @AllowNull(false)
-  @Column(DataType.STRING)
-  type: string;
+  @Column({
+    type: DataType.ENUM,
+    values: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf']
+  })  
+  type: FileType;
+
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
+  pageCount: number;
 
   @AllowNull(false)
   @Column(DataType.DATE)

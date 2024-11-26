@@ -15,14 +15,7 @@ export class FileService {
         return newFile;
     }
 
-    async getFile(fileId: string): Promise<any> {
-        const file = await this.fileRepository.findOne({
-            where: { fileId },
-        });
-
-        if (!file) {
-            throw new Error('File not found');
-        }
-        return file;
+    async findOneById(fileId: number) {
+        return await this.fileRepository.findByPk(fileId);
     }
 }

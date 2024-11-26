@@ -156,19 +156,19 @@ class PaperReportService {
     }
 
     const totalA3PaperCount = printingHistories
-      .filter((record: PrintingHistory) => record.page_size === 'A3')
-      .reduce((sum: number, record: PrintingHistory) => sum + (record.page_print * record.copies), 0);
+      .filter((record: PrintingHistory) => record.pageSize === 'A3')
+      .reduce((sum: number, record: PrintingHistory) => sum + (record.pagePrint * record.copies), 0);
 
     const totalA4PaperCount = printingHistories
-      .filter((record: PrintingHistory) => record.page_size === 'A4')
-      .reduce((sum: number, record: PrintingHistory) => sum + (record.page_print * record.copies), 0);
+      .filter((record: PrintingHistory) => record.pageSize === 'A4')
+      .reduce((sum: number, record: PrintingHistory) => sum + (record.pagePrint * record.copies), 0);
 
     const totalA5PaperCount = printingHistories
-      .filter((record: PrintingHistory) => record.page_size === 'A5')
-      .reduce((sum: number, record: PrintingHistory) => sum + (record.page_print * record.copies), 0);
+      .filter((record: PrintingHistory) => record.pageSize === 'A5')
+      .reduce((sum: number, record: PrintingHistory) => sum + (record.pagePrint * record.copies), 0);
 
 
-    const mostUsePrinter = findMostFrequentValue(printingHistories.map(record => record.printer_id));
+    const mostUsePrinter = findMostFrequentValue(printingHistories.map(record => record.printerId));
 
     // Calculate peak usage day
     const peakDay = findMostFrequentValue(printingHistories.map(record => record.date))

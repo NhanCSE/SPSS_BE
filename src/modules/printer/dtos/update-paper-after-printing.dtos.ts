@@ -1,8 +1,8 @@
-import { IsOptional, IsInt, IsUUID } from 'class-validator';
+import { IsOptional, IsInt } from 'class-validator';
 
 export class UpdatePaperAfterPrintingDto {
-  @IsUUID()
-  id: string;
+  @IsInt()
+  id: number;
 
   @IsOptional()
   @IsInt()

@@ -3,7 +3,7 @@ import { ErrorHistory } from "./entities/errorHistory.entity";
 import { PrintingHistory } from "./entities/printingHistory.entity";
 import { SysConfigHistory } from "./entities/sysConfigHistory.entity";
 
-export const HistoryProvider = [
+export const historyProvider = [
   {
     provide: ERROR_HISTORY_REPOSITORY,
     useValue: ErrorHistory

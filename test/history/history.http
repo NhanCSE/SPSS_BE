@@ -1,0 +1,27 @@
+###
+
+GET http://localhost:3000/v1/history/print/student/1
+Content-Type: application/json
+
+{
+   
+}
+
+
+###
+
+GET http://localhost:3000/v1/history/print/1
+Content-Type: application/json
+
+{
+   
+}
+
+###
+
+GET http://localhost:3000/v1/history/print/
+Content-Type: application/json
+
+{
+   
+}
