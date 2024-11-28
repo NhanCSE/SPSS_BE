@@ -19,10 +19,9 @@ import { Student } from 'src/modules/user/entities/student.entity';
 @Table
 export class Payment extends Model<Payment> {
   @PrimaryKey
-  @Default(UUIDV4)
   @AllowNull(false)
-  @Column(DataType.UUID)
-  transaction_id: UUID;
+  @Column(DataType.STRING)
+  transaction_id: String;
 
   @AllowNull(false)
   @Column(DataType.DATE)
@@ -30,7 +29,7 @@ export class Payment extends Model<Payment> {
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-  value: Number;
+  value: number;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
@@ -38,11 +37,15 @@ export class Payment extends Model<Payment> {
 
   @AllowNull(false)
   @ForeignKey(() => Student)
-  @Column(DataType.UUID)
-  student_id: UUID;
+  @Column(DataType.INTEGER)
+  student_id: number;
 
   @BelongsTo(() => Student)
   student: Student;
 
+
+  @AllowNull(false)
+  @Column(DataType.BOOLEAN)
+  status: boolean
 }
 

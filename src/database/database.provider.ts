@@ -38,7 +38,7 @@ export const databaseProviders = [
       const sequelize = new Sequelize(config);
 
       // sequelize.addModels([PrinterError, Printer, Location, File, ErrorHistory, PrintingHistory, SysConfigHistory, Report, SystemConfiguration, Admin, Student, User, Payment]);
-      sequelize.addModels([PrinterError, Printer, Location, Admin, Student, User, ErrorHistory, PrintingHistory, SysConfigHistory, SystemConfiguration, GeneralPaperReport, Payment_Trasaction, File]);
+      sequelize.addModels([PrinterError, Printer, Location, Admin, Student, User, ErrorHistory, PrintingHistory, SysConfigHistory, SystemConfiguration, GeneralPaperReport, Payment_Trasaction, File, Payment]);
       await sequelize.sync();
 
       try {
