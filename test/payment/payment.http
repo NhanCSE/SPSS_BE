@@ -1,0 +1,8 @@
+POST http://localhost:3000/v1/payment/create
+Content-Type: application/json
+
+{
+    "studentId": 1,
+    "comboType": "type1",
+    "numberCombo": 1
+}

@@ -1,0 +1,10 @@
+{
+    "type1": {
+      "price": 100000,
+      "amount": 10
+    },
+    "type2": {
+      "price": 2000,
+      "amount": 120
+    }
+  }

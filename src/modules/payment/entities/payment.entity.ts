@@ -1,4 +1,5 @@
-
+import { UUID } from 'crypto';
+import { UUIDV4 } from 'sequelize';
 import {
   Table,
   Column,
@@ -11,20 +12,16 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
-  AutoIncrement,
 } from 'sequelize-typescript';
 import { Student } from 'src/modules/user/entities/student.entity';
 
 
-@Table({
-  tableName: "payment"
-})
+@Table
 export class Payment extends Model<Payment> {
   @PrimaryKey
-  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.INTEGER)
-  transactionId: number;
+  @Column(DataType.STRING)
+  transactionId: String;
 
   @AllowNull(false)
   @Column(DataType.DATE)
@@ -32,7 +29,7 @@ export class Payment extends Model<Payment> {
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-  value: Number;
+  value: number;
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
@@ -46,5 +43,8 @@ export class Payment extends Model<Payment> {
   @BelongsTo(() => Student)
   student: Student;
 
-}
 
+  @AllowNull(false)
+  @Column(DataType.BOOLEAN)
+  status: boolean
+}

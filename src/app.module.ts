@@ -9,9 +9,10 @@ import { SystemConfigurationModule } from './modules/system/system.module';
 import { FileModule } from './modules/file/file.module';
 import { PrintingHistoryModule } from './modules/history/history.module';
 import { UserModule } from './modules/user/user.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
-  imports: [DatabaseModule, PrinterModule, UserModule, ReportModule, SystemConfigurationModule, FileModule, PrintingHistoryModule],
+  imports: [DatabaseModule, PrinterModule, UserModule, ReportModule, SystemConfigurationModule, FileModule, PrintingHistoryModule, PaymentModule],
   controllers: [AppController],
   providers: [AppService],
 })
