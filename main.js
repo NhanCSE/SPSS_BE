@@ -571,21 +571,14 @@ var Payment = /** @class */ (function () {
             });
         });
     };
-    return Payment;
-}());
-exports.Payment = Payment;
-var Auth = /** @class */ (function () {
-    function Auth() {
-        this.baseUrl = "".concat(hostURL, "/auth");
-    }
-    Auth.prototype.login = function (payload) {
+    Payment.prototype.create = function (payload, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_23;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/login"), payload)];
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/create"), payload, customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -598,9 +591,36 @@ var Auth = /** @class */ (function () {
             });
         });
     };
-    Auth.prototype.signup = function (createInfo) {
+    return Payment;
+}());
+exports.Payment = Payment;
+var Auth = /** @class */ (function () {
+    function Auth() {
+        this.baseUrl = "".concat(hostURL, "/auth");
+    }
+    Auth.prototype.login = function (payload) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_24;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/login"), payload)];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_24 = _a.sent();
+                        processError(error_24);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Auth.prototype.signup = function (createInfo) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_25;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -610,8 +630,8 @@ var Auth = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_24 = _a.sent();
-                        processError(error_24);
+                        error_25 = _a.sent();
+                        processError(error_25);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

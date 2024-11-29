@@ -132,3 +132,9 @@ export interface ListResponse {
   acceptedList: number[]
   unAcceptedList: number[]
 }
+
+export interface CreatePayemntDto {
+  studentId: number;
+  comboType: String;
+  numberCombo: number;
+} 

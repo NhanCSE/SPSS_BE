@@ -10,7 +10,8 @@ import {
   LoginInfoDto,
   SearchAvailableDto,
   SearchPayload,
-  PrintFileDto
+  PrintFileDto,
+  CreatePayemntDto
 } from './interface'
 
 
@@ -388,6 +389,19 @@ export class Payment {
     try {
 
       const response: AxiosResponse = await axios.get(`${this.baseUrl}/view/${student_id}`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async create(payload: CreatePayemntDto, token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.post(`${this.baseUrl}/create`, payload, customHeader(token))
 
       return processResponse(response);
     }
