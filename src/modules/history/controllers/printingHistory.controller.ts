@@ -86,4 +86,23 @@ export class PrintingHistoryController {
             });
         }
     }
+
+    @Get('/printer/:printerId')
+    async getPrinterHistory(@Param('printerId') printerId: number, @Res() res): Promise<any> {
+        try {
+            const printingHistory = await this.printingHistoryService.getAllByPrinterId(printerId);
+            if (!printingHistory) {
+                this.response.initResponse(false, 'Not found history', null);
+                return res.status(HttpStatus.NOT_FOUND).json(this.response);
+            }
+            this.response.initResponse(true, 'Get Printing History successfully', printingHistory);
+            return res.status(HttpStatus.OK).json(this.response);
+        } catch (error) {
+            this.logger.error(error.message, error.stack);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 }

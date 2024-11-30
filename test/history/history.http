@@ -25,3 +25,12 @@ Content-Type: application/json
 {
    
 }
+
+###
+
+GET http://localhost:3000/v1/history/print/printer/1
+Content-Type: application/json
+
+{
+   
+}

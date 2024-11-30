@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpStatus, InternalServerErrorException, Post, Req, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpStatus, InternalServerErrorException, Param, Post, Req, Res } from "@nestjs/common";
 import axios from "axios";
 import * as dotenv from 'dotenv';
 import { PaymentService } from "./payment.service";
@@ -24,8 +24,7 @@ export class PaymentController {
   async createPayment(@Req() req, @Body() dto: CreatePayemntDto, @Res() res) {
     try {
       const createdPayment = await this.paymentService.createPayment(dto);
-      // this.response.initResponse(true, "Tạo đơn hàng thành công", createdPayment);
-      console.log(createdPayment);
+      this.response.initResponse(true, "Tạo đơn hàng thành công", createdPayment);
       return res.status(HttpStatus.CREATED).json(createdPayment);
     } catch (error) {
       this.logger.error(error.message, error.stack);
@@ -67,11 +66,50 @@ export class PaymentController {
 
   }
 
-  // @Get("/test")
-  // async test(@Req() req, @Res() res) {
-  //   const filePath = path.join(__dirname, '..', '..', '..', '..', 'src', 'modules', 'payment', 'list_price.json'); // Đường dẫn tới file JSON
-  //   // console.log(path.join(__dirname, '..', '..', '..', '..'));
-  //   const jsonData = JSON.parse(readFileSync(filePath, 'utf8'));
-  //   return res.status(HttpStatus.OK).json(jsonData)
-  // }
+  @Get('/search')
+  async searchAll(@Req() req, @Res() res) {
+    try {
+      const result = await this.paymentService.searchAllPayment();
+      this.response.initResponse(true, "Lấy thông tin thành công", result);
+      return res.status(HttpStatus.CREATED).json(result);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      if (error instanceof InternalServerErrorException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+      }
+
+      if (error instanceof BadRequestException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.BAD_REQUEST).json(this.response);
+      }
+
+      this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+
+
+  @Get('/search/student/:studentId')
+  async searchByStudentId(@Req() req, @Param('studentId') studentId: number, @Res() res) {
+    try {
+      const result = await this.paymentService.searchByStudentId(studentId);
+      this.response.initResponse(true, "Lấy thông tin thành công", result);
+      return res.status(HttpStatus.CREATED).json(result);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      if (error instanceof InternalServerErrorException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+      }
+
+      if (error instanceof BadRequestException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.BAD_REQUEST).json(this.response);
+      }
+
+      this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
 }

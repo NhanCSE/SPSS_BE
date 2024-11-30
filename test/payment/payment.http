@@ -6,3 +6,23 @@ Content-Type: application/json
     "comboType": "type1",
     "numberCombo": 1
 }
+
+###
+
+
+GET http://localhost:3000/v1/payment/search
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+
+GET http://localhost:3000/v1/payment/search/student/1
+Content-Type: application/json
+
+{
+    
+}

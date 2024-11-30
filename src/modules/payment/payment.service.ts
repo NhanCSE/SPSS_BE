@@ -129,4 +129,15 @@ export class PaymentService {
     return true;
   }
 
+  async searchAllPayment() {
+    return await this.paymentRepository.findAll();
+  }
+
+  async searchByStudentId(studentId: number) {
+    return await this.paymentRepository.findAll({
+      where: {
+        studentId
+      }
+    });
+  }
 }

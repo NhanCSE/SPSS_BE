@@ -50,4 +50,12 @@ export class PrintingHistoryService {
     });
   }
 
+  async getAllByPrinterId(printerId: number) {
+    return this.printingHistory.findAll({
+      where: {
+        printerId
+      }
+    });
+  }
+
 }
