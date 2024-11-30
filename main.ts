@@ -333,6 +333,19 @@ export class HistoryOperation {
     }
   }
 
+  async getPrinterHistory(printerId: number, token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/printer/${printerId}`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
 }
 
 export class User {
@@ -402,6 +415,32 @@ export class Payment {
     try {
 
       const response: AxiosResponse = await axios.post(`${this.baseUrl}/create`, payload, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async getAllPayment(token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/search`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async getStudentPayment(studentId: number, token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/search/student/${studentId}`, customHeader(token))
 
       return processResponse(response);
     }
