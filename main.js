@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Auth = exports.Payment = exports.User = exports.HistoryOperation = exports.FileOperation = exports.PrinterOperation = exports.SystemConfiguration = void 0;
 var axios_1 = require("axios");
-var hostURL = "https://localhost:3000/v1";
+var hostURL = "http://localhost:3000/v1";
 var customHeader = function (token) {
     if (token) {
         return {
@@ -564,21 +564,14 @@ var User = /** @class */ (function () {
             });
         });
     };
-    return User;
-}());
-exports.User = User;
-var Payment = /** @class */ (function () {
-    function Payment() {
-        this.baseUrl = "".concat(hostURL, "/payment");
-    }
-    Payment.prototype.viewPayment = function (student_id, token) {
+    User.prototype.searchUser = function (searchPayload, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_23;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/view/").concat(student_id), customHeader(token))];
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/search"), searchPayload, customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -591,14 +584,21 @@ var Payment = /** @class */ (function () {
             });
         });
     };
-    Payment.prototype.create = function (payload, token) {
+    return User;
+}());
+exports.User = User;
+var Payment = /** @class */ (function () {
+    function Payment() {
+        this.baseUrl = "".concat(hostURL, "/payment");
+    }
+    Payment.prototype.viewPayment = function (student_id, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_24;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/create"), payload, customHeader(token))];
+                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/view/").concat(student_id), customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -611,14 +611,14 @@ var Payment = /** @class */ (function () {
             });
         });
     };
-    Payment.prototype.getAllPayment = function (token) {
+    Payment.prototype.create = function (payload, token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_25;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/search"), customHeader(token))];
+                        return [4 /*yield*/, axios_1.default.post("".concat(this.baseUrl, "/create"), payload, customHeader(token))];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
@@ -631,9 +631,29 @@ var Payment = /** @class */ (function () {
             });
         });
     };
-    Payment.prototype.getStudentPayment = function (studentId, token) {
+    Payment.prototype.getAllPayment = function (token) {
         return __awaiter(this, void 0, void 0, function () {
             var response, error_26;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, axios_1.default.get("".concat(this.baseUrl, "/search"), customHeader(token))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, processResponse(response)];
+                    case 2:
+                        error_26 = _a.sent();
+                        processError(error_26);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Payment.prototype.getStudentPayment = function (studentId, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_27;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -643,8 +663,8 @@ var Payment = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_26 = _a.sent();
-                        processError(error_26);
+                        error_27 = _a.sent();
+                        processError(error_27);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -660,7 +680,7 @@ var Auth = /** @class */ (function () {
     }
     Auth.prototype.login = function (payload) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_27;
+            var response, error_28;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -670,8 +690,8 @@ var Auth = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_27 = _a.sent();
-                        processError(error_27);
+                        error_28 = _a.sent();
+                        processError(error_28);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -680,7 +700,7 @@ var Auth = /** @class */ (function () {
     };
     Auth.prototype.signup = function (createInfo) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, error_28;
+            var response, error_29;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -690,8 +710,8 @@ var Auth = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, processResponse(response)];
                     case 2:
-                        error_28 = _a.sent();
-                        processError(error_28);
+                        error_29 = _a.sent();
+                        processError(error_29);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

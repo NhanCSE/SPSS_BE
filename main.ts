@@ -15,7 +15,7 @@ import {
 } from './interface'
 
 
-const hostURL = "https://localhost:3000/v1";
+const hostURL = "http://localhost:3000/v1";
 
 const customHeader = (token: string | null) => {
   if (token) {
@@ -382,6 +382,18 @@ export class User {
   async getInfo(student_id: string, token: string) {
     try {
       const response: AxiosResponse = await axios.get(`${this.baseUrl}/search/${student_id}`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async searchUser(searchPayload: SearchPayload, token: string) {
+    try {
+      const response: AxiosResponse = await axios.post(`${this.baseUrl}/search`, searchPayload, customHeader(token))
 
       return processResponse(response);
     }
