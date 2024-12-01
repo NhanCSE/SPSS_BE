@@ -509,6 +509,20 @@ export class Payment {
 
     }
   }
+
+
+  async getStudentPaymentByAdmin(studentId: number, token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/search/admin/${studentId}`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
 }
 
 export class Auth {
