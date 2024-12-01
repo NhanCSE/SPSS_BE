@@ -129,6 +129,18 @@ export class PrinterOperation {
     }
   }
 
+  async countAll(token: string) {
+    try {
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/count/all`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
   async printFileCheck(printerId: number, payload: PrintFileDto, token: string) {
     try {
       const response: AxiosResponse = await axios.post(`${this.baseUrl}/print/check/${printerId}`, payload, customHeader(token))
@@ -394,6 +406,42 @@ export class User {
   async searchUser(searchPayload: SearchPayload, token: string) {
     try {
       const response: AxiosResponse = await axios.post(`${this.baseUrl}/search`, searchPayload, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async countUser(token: string) {
+    try {
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/count`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async countAdmin(token: string) {
+    try {
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/admin/count`, customHeader(token))
+
+      return processResponse(response);
+    }
+    catch (error) {
+      processError(error)
+
+    }
+  }
+
+  async countStudent(token: string) {
+    try {
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/admin/count`, customHeader(token))
 
       return processResponse(response);
     }
