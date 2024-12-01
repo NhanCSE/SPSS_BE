@@ -441,7 +441,7 @@ export class User {
 
   async countStudent(token: string) {
     try {
-      const response: AxiosResponse = await axios.get(`${this.baseUrl}/admin/count`, customHeader(token))
+      const response: AxiosResponse = await axios.get(`${this.baseUrl}/student/count`, customHeader(token))
 
       return processResponse(response);
     }
