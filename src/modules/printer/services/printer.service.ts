@@ -159,6 +159,11 @@ export class PrinterService {
       });
       return results.length;
   }
+
+  async countAll() {
+    return await this.printerRepository.count();
+  }
+
   async update(id: number, updatePrinterDto: UpdatePrinterDto) {
       const validFields = [
         'id',

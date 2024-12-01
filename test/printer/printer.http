@@ -35,6 +35,7 @@ Content-Type: application/json
 
 POST http://localhost:3000/v1/printer/search/available
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Ikjhu41jIHZpw6puIiwiaWF0IjoxNzMzMDU5MTg2LCJleHAiOjE3MzMxMDIzODZ9.ZGyg2EpeqOGEFX6xLdP7dnx5xcMXbNt9_CmRZcguKwg
 
 {
     "A3Require": 145,
@@ -103,4 +104,15 @@ Content-Type: application/json
             "copies": 2
         }
    ]
+}
+
+
+
+###
+
+GET http://localhost:3000/v1/printer/count/all
+Content-Type: application/json
+
+{
+   
 }

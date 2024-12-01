@@ -32,3 +32,11 @@ Content-Type: application/json
 }
 
 
+###
+GET http://localhost:3000/v1/user/paper/search/1
+Content-Type: application/json
+
+{
+    
+}
+

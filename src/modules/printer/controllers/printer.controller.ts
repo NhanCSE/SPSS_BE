@@ -12,6 +12,7 @@ import {
   Res,
   Query,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'src/modules/response/response.entity';
 import { PrinterService } from '../services/printer.service';
@@ -22,6 +23,7 @@ import { LoggerService } from 'src/common/logger/logger.service';
 import { SearchAvailableDto } from '../dtos/search-available.dtos';
 import { SearchPayload } from 'src/common/interfaces/search_payload.interface';
 import { PrintFileDto } from '../dtos/print-file.dtos';
+import { JwtAuthGuard } from 'src/common/guards/authenticate.guard';
 
 @Controller('printer')
 export class PrinterController {
@@ -31,6 +33,8 @@ export class PrinterController {
     private readonly response: Response,
   ) {}
 
+
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   async create(@Req() req, @Body() dto: CreatePrinterDto, @Res() res) {
     try {
@@ -58,6 +62,7 @@ export class PrinterController {
     }
   }
   
+  @UseGuards(JwtAuthGuard)
   @Post('search')
   async search(@Body() searchPayload: SearchPayload, @Res() res) {
     try {
@@ -75,6 +80,7 @@ export class PrinterController {
     }
   }
   
+  @UseGuards(JwtAuthGuard)
   @Post('search/available')
   async searchAvailable(@Req() req, @Body() criteria: SearchAvailableDto, @Res() res) {
     try {
@@ -91,13 +97,12 @@ export class PrinterController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/print/:printerId')
   async printFile(@Req() req, @Param('printerId') printerId: number, @Body() payload: PrintFileDto, @Res() res) {
     try {
 
-      // const studentId = req.user.id;
-      const studentId = 1;
-
+      const studentId = req.user.id;
 
       const printers = await this.printerService.printFile(printerId, studentId, payload);
       this.response.initResponse(true, 'Tìm kiếm thành công', printers);
@@ -114,6 +119,7 @@ export class PrinterController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/print/check/:printerId')
   async printFileCheck(@Req() req, @Param('printerId') printerId: number, @Body() payload: PrintFileDto, @Res() res) {
     try {
@@ -136,13 +142,11 @@ export class PrinterController {
     }
   }
 
-  //Đếm số lượng máy in thỏa mãn yêu cầu
+  @UseGuards(JwtAuthGuard)
   @Get('count')
   async count(@Query() query, @Res() res) {
     try {
-      // Lấy các query parameters từ request (ví dụ: ?brand=HP&model=HP100)
       const searchCriteria = query;
-      // Tìm kiếm máy in theo các tham số
       const numberOfPrinters = await this.printerService.count(searchCriteria);
       if (numberOfPrinters == -1) {
         this.response.initResponse(false, 'Đếm thất bại', null);
@@ -159,6 +163,28 @@ export class PrinterController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Get('count/all')
+  async countAll(@Query() query, @Res() res) {
+    try {
+      
+      const numberOfPrinters = await this.printerService.countAll();
+      this.response.initResponse(true, 'Đếm thành công', numberOfPrinters);
+      return res.status(HttpStatus.OK).json(this.response);
+    } catch (error) {
+      this.response.initResponse(
+        false,
+        'Đã xảy ra lỗi. Vui lòng thử lại',
+        null,
+      );
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+
+  
+  @UseGuards(JwtAuthGuard)
   @Put('update')
   async update(@Body() updatePrinterDto: UpdatePrinterDto, @Res() res) {
     try {
@@ -195,6 +221,8 @@ export class PrinterController {
       });
     }
   }
+
+  @UseGuards(JwtAuthGuard)
   @Put('/update-paper-after-printing')
   async updatePaperAfterPrinting(
     @Body() updatePaper: UpdatePaperAfterPrintingDto,
@@ -234,6 +262,8 @@ export class PrinterController {
       });
     }
   }
+
+  @UseGuards(JwtAuthGuard)
   @Delete('delete')
   async delete(@Query() query, @Res() res) {
     try {

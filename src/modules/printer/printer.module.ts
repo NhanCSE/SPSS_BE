@@ -11,13 +11,15 @@ import { FileProviders } from "../file/file.provider";
 import { FileService } from "../file/services/file.service";
 import { PrintingHistoryService } from "../history/services/printingHistory.service";
 import { historyProvider } from "../history/history.provider";
+import { UserModule } from "../user/user.module";
 
 
 @Module({
     imports: [
         DatabaseModule,
         LoggerModule,
-        ResponseModule
+        ResponseModule,
+        UserModule
     ],
     controllers: [PrinterController],
     providers: [...printerProviders, PrinterService, ...UserProviders, UserService, ...FileProviders, FileService, ...historyProvider, PrintingHistoryService],
