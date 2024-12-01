@@ -124,8 +124,8 @@ export class PrinterController {
   async printFileCheck(@Req() req, @Param('printerId') printerId: number, @Body() payload: PrintFileDto, @Res() res) {
     try {
 
-      // const studentId = req.user.id;
-      const studentId = 1;
+      const studentId = req.user.id;
+      
 
 
       const printers = await this.printerService.printFileCheck(printerId, studentId, payload);
