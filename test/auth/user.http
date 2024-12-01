@@ -1,0 +1,34 @@
+
+###
+POST http://localhost:3000/v1/user/search
+Content-Type: application/json
+
+{
+    "criteria": [
+        {
+            "field": "ssoId",
+            "operator": "=",
+            "value": 1
+        }
+    ],
+    "addition": ""
+}
+
+
+
+###
+POST http://localhost:3000/v1/user/search
+Content-Type: application/json
+
+{
+    "criteria": [
+        {
+            "field": "Student.ssoId",
+            "operator": "=",
+            "value": 1
+        }
+    ],
+    "addition": ""
+}
+
+

@@ -1,5 +1,4 @@
 import { BadRequestException, Body, Controller, Get, HttpStatus, InternalServerErrorException, Param, Post, Req, Res } from "@nestjs/common";
-import axios from "axios";
 import * as dotenv from 'dotenv';
 import { PaymentService } from "./payment.service";
 import { CreatePayemntDto } from "./payment.dto";
@@ -25,7 +24,7 @@ export class PaymentController {
     try {
       const createdPayment = await this.paymentService.createPayment(dto);
       this.response.initResponse(true, "Tạo đơn hàng thành công", createdPayment);
-      return res.status(HttpStatus.CREATED).json(createdPayment);
+      return res.status(HttpStatus.CREATED).json(this.response);
     } catch (error) {
       this.logger.error(error.message, error.stack);
       if (error instanceof InternalServerErrorException) {
@@ -46,8 +45,9 @@ export class PaymentController {
   @Post("/callback")
   async callback(@Req() req, @Body() data, @Res() res) {
     try {
-      const result = await this.paymentService.paySuccessful(data.orderId)
-      return res.status(HttpStatus.OK).json(result);
+      const result = await this.paymentService.paySuccessful(data.orderId);
+      this.response.initResponse(true, "Thanh toán thành công", result);
+      return res.status(HttpStatus.OK).json(this.response);
     } catch (error) {
       this.logger.error(error.message, error.stack);
       if (error instanceof InternalServerErrorException) {
@@ -71,7 +71,7 @@ export class PaymentController {
     try {
       const result = await this.paymentService.searchAllPayment();
       this.response.initResponse(true, "Lấy thông tin thành công", result);
-      return res.status(HttpStatus.CREATED).json(result);
+      return res.status(HttpStatus.CREATED).json(this.response);
     } catch (error) {
       this.logger.error(error.message, error.stack);
       if (error instanceof InternalServerErrorException) {

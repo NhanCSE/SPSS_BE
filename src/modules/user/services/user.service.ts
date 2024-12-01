@@ -11,6 +11,8 @@ import { CreateUserDto } from '../dtos/createUser.dto';
 import { Student } from '../entities/student.entity';
 import { Admin } from '../entities/admin.entity';
 import * as bcrypt from 'bcrypt';
+import { SearchPayload } from 'src/common/interfaces/search_payload.interface';
+import { findByCriteria } from '../utils/find_by_criteria.user.util';
 
 @Injectable()
 export class UserService {
@@ -145,4 +147,11 @@ export class UserService {
       where: { id: adminId } 
     });
   }
+
+  async search(searchPayload: SearchPayload) {
+    return await findByCriteria(searchPayload.criteria, User, searchPayload.addition, {
+      option: 'manual',
+      includeOption: [{model: Student}, {model: Admin}]
+  }, null);
+}
 }

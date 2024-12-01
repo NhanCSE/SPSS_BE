@@ -6,6 +6,7 @@ import { CreateUserDto } from "../dtos/createUser.dto";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { UserRole } from "src/common/contants";
 import { JwtAuthGuard } from "src/common/guards/authenticate.guard";
+import { SearchPayload } from "src/common/interfaces/search_payload.interface";
 
 @Controller('user')
 export class UserController {
@@ -95,6 +96,23 @@ export class UserController {
       }
 
       this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+
+  @Post('search')
+  async search(@Body() searchPayload: SearchPayload, @Res() res) {
+    try {
+      const users = await this.userService.search(searchPayload);
+      this.response.initResponse(true, 'Tìm kiếm thành công', users);
+      return res.status(HttpStatus.OK).json(this.response);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      this.response.initResponse(
+        false,
+        'Đã xảy ra lỗi. Vui lòng thử lại',
+        null,
+      );
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
