@@ -47,6 +47,7 @@ export class PaymentController {
   @Post("/callback")
   async callback(@Req() req, @Body() data, @Res() res) {
     try {
+
       const result = await this.paymentService.paySuccessful(data.orderId)
       return res.status(HttpStatus.OK).json(result);
     } catch (error) {
@@ -64,6 +65,8 @@ export class PaymentController {
       this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
+
+
 
   }
 

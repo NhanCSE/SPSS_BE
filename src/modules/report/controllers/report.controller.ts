@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, HttpStatus, InternalServerErrorException, Post,Get, Req, Res } from "@nestjs/common";
+import { BadRequestException, Body, Controller, HttpStatus, InternalServerErrorException, Post, Get, Req, Res } from "@nestjs/common";
 import { Response } from "src/modules/response/response.entity";
 import { ReportService } from "../services/report.service";
 import { CreateReportDto } from "../dtos/create-report.dtos";
@@ -12,7 +12,7 @@ export class ReportController {
     private readonly reportService: ReportService,
     private readonly logger: LoggerService,
     private readonly response: Response
-  ) {}
+  ) { }
 
   @Post('create')
   async create(

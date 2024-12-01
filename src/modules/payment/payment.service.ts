@@ -123,8 +123,8 @@ export class PaymentService {
     })
 
     student.bought_paper += payment.numberOfPages;
-    student.save();
-    payment.save();
+    await student.save();
+    await payment.save();
 
 
     return true;
