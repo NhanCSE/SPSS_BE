@@ -116,4 +116,83 @@ export class UserController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
+
+  @Get('count')
+  async countUser(
+    @Req() req,
+    @Res() res,
+  ) {
+    try {
+      const result = await this.userService.countUser();
+      this.response.initResponse(true, "Lấy số lượng user thành công", result);
+      return res.status(HttpStatus.CREATED).json(this.response);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      if (error instanceof InternalServerErrorException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+      }
+
+      if (error instanceof BadRequestException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.BAD_REQUEST).json(this.response);
+      }
+
+      this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+
+  @Get('/student/count')
+  async countStudent(
+    @Req() req,
+    @Res() res,
+  ) {
+    try {
+      const result = await this.userService.countStudent();
+      this.response.initResponse(true, "Lấy số lượng học sinh thành công", result);
+      return res.status(HttpStatus.CREATED).json(this.response);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      if (error instanceof InternalServerErrorException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+      }
+
+      if (error instanceof BadRequestException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.BAD_REQUEST).json(this.response);
+      }
+
+      this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+
+  @Get('admin/count')
+  async countAdmin(
+    @Req() req,
+    @Res() res,
+  ) {
+    try {
+      const result = await this.userService.countAdmin();
+      this.response.initResponse(true, "Lấy số lượng admin thành công", result);
+      return res.status(HttpStatus.CREATED).json(this.response);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      if (error instanceof InternalServerErrorException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+      }
+
+      if (error instanceof BadRequestException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.BAD_REQUEST).json(this.response);
+      }
+
+      this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
+
 }

@@ -4,10 +4,10 @@ import * as cors from 'cors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix("/v1");
-  app.use(cors({
-    origin: ['http://localhost:3000'],
-    credentials: true,
-  }));
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://localhost:4000', 'http://localhost:8000'],
+    credentials: true, // Allow credentials
+  });
   await app.listen(3000);
 }
 bootstrap();

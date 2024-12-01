@@ -3,6 +3,7 @@ import { PrintingHistory } from '../entities/printingHistory.entity';
 import { CreatePrintingHistoryDto } from '../dto/printingHistory.dto';
 import { PRINTING_HISTORY_REPOSITORY } from 'src/common/contants';
 import { FileService } from 'src/modules/file/services/file.service';
+import axios, { AxiosResponse } from 'axios'
 // import { CreatePrintingHistoryDto } from './dto/printing-history.dto';
 
 @Injectable()
@@ -56,6 +57,55 @@ export class PrintingHistoryService {
         printerId
       }
     });
+  }
+
+
+  customHeader(token: string | null) {
+    if (token) {
+      return {
+        withCredentials: true,
+        validateStatus: (status: any) => status >= 200 && status <= 500,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+      };
+    }
+  
+    return {
+      withCredentials: true,
+      validateStatus: (status: any) => status >= 200 && status <= 500,
+    };
+  };
+  
+  processResponse (response: AxiosResponse) {
+    return {
+      success: response.data.success,
+      message: response.data.message,
+      data: response.data.data,
+      status: response.status,
+    };
+  };
+  
+  processError(error: any) {
+    return {
+      success: error?.response?.data,
+      request: error?.request,
+      status: error.response ? error.response.status : null,
+    };
+  };
+
+
+  async getPrinterHistory(printerId: number, token: string) {
+    try {
+
+      const response: AxiosResponse = await axios.get(`https://3939-2402-9d80-c02-d6e6-ec68-4f62-3e24-658.ngrok-free.app/v1/history/print/printer/${printerId}`, this.customHeader(token))
+
+      return this.processResponse(response);
+    }
+    catch (error) {
+      this.processError(error)
+
+    }
   }
 
 }

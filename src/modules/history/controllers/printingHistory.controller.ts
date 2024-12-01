@@ -26,10 +26,8 @@ export class PrintingHistoryController {
             
         } catch (error) {
             this.logger.error(error.message, error.stack);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: error.message,
-            });
+            this.response.initResponse(false, 'Get Printing History failed', null);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
         }
     }
 
@@ -45,10 +43,8 @@ export class PrintingHistoryController {
             return res.status(HttpStatus.OK).json(this.response);
         } catch (error) {
             this.logger.error(error.message, error.stack);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: error.message,
-            });
+            this.response.initResponse(false, 'Get Printing History failed', null);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
         }
     }
 
@@ -80,10 +76,8 @@ export class PrintingHistoryController {
             return res.status(HttpStatus.OK).json(this.response);
         } catch (error) {
             this.logger.error(error.message, error.stack);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: error.message,
-            });
+            this.response.initResponse(false, 'Get Printing History failed', null);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
         }
     }
 
@@ -99,10 +93,8 @@ export class PrintingHistoryController {
             return res.status(HttpStatus.OK).json(this.response);
         } catch (error) {
             this.logger.error(error.message, error.stack);
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: error.message,
-            });
+            this.response.initResponse(false, 'Get Printing History failed', null);
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
         }
     }
 }

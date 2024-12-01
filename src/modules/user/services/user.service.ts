@@ -152,6 +152,19 @@ export class UserService {
     return await findByCriteria(searchPayload.criteria, User, searchPayload.addition, {
       option: 'manual',
       includeOption: [{model: Student}, {model: Admin}]
-  }, null);
-}
+    }, null);
+  }
+
+
+  async countUser() {
+    return await this.userRepository.count();
+  }
+
+  async countStudent() {
+    return await this.studentRepository.count();
+  }
+
+  async countAdmin() {
+    return await this.adminRepository.count();
+  }
 }
