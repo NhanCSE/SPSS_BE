@@ -1,10 +1,18 @@
 {
     "type1": {
       "price": 1000,
-      "amount": 10
+      "amount": 5
     },
     "type2": {
       "price": 2000,
-      "amount": 120
+      "amount": 12
+    },
+    "type3": {
+      "price": 3000,
+      "amount": 20
+    },
+    "type4": {
+      "price": 4000,
+      "amount": 29
     }
   }
