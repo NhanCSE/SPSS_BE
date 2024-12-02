@@ -27,8 +27,8 @@ export class PaymentService {
     var secretKey = process.env.SECRETKEY;
     var orderInfo = `Tong trang: ${value[1]}`;
     var partnerCode = process.env.PARTNERCODE;
-    var redirectUrl = 'http://localhost:3000';
-    var ipnUrl = 'https://c157-14-186-69-61.ngrok-free.app/v1/payment/callback';
+    var redirectUrl = 'http://localhost:3000/payment/result';
+    var ipnUrl = 'https://1cec-2a09-bac5-d46f-15f-00-23-433.ngrok-free.app/v1/payment/callback';
     var requestType = "payWithMethod";
     var amount = value[0];
     var orderId = partnerCode + new Date().getTime();

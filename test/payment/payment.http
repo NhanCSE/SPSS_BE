@@ -1,4 +1,4 @@
-POST http://localhost:3000/v1/payment/create
+POST http://localhost:3001/v1/payment/create
 Content-Type: application/json
 
 {

@@ -133,6 +133,7 @@ export class PrinterController {
       return res.status(HttpStatus.OK).json(this.response);
       
     } catch (error) {
+      this.logger.error(error.message, error.stack);
       this.response.initResponse(
         false,
         'Đã xảy ra lỗi. Vui lòng thử lại',
