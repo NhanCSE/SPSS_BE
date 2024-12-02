@@ -38,14 +38,14 @@ export class UserService {
       username: payload.username,
       name: payload.name,
       email: payload.email,
-      role: payload.role,
+      role: payload.role
     });
 
     if (payload.role == UserRole.STUDENT) {
       await this.studentRepository.create({
         ssoId: user['ssoId'],
         boughtPaper: 0,
-        currentFreePaper: 0,
+        currentFreePaper: 200,
       });
     } else if (payload.role == UserRole.ADMIN) {
       await this.adminRepository.create({

@@ -112,4 +112,27 @@ export class PaymentController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
     }
   }
+
+  @Get('/search/admin/:studentId')
+  async searchByAdmin(@Req() req, @Param('studentId') studentId: number, @Res() res) {
+    try {
+      const result = await this.paymentService.searchByStudentId(studentId);
+      this.response.initResponse(true, "Lấy thông tin thành công", result);
+      return res.status(HttpStatus.CREATED).json(this.response);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      if (error instanceof InternalServerErrorException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+      }
+
+      if (error instanceof BadRequestException) {
+        this.response.initResponse(false, error.message, null);
+        return res.status(HttpStatus.BAD_REQUEST).json(this.response);
+      }
+
+      this.response.initResponse(false, "Đã xảy ra lỗi. Vui lòng thử lại", null);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(this.response);
+    }
+  }
 }
