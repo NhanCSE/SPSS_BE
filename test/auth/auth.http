@@ -1,15 +1,15 @@
 
 ###
-POST http://localhost:3000/v1/auth/signup
+POST http://localhost:3001/v1/auth/signup
 Content-Type: application/json
 
 {
-    "password": "studenttest1",
-    "username": "studenttest1",
-    "name": "STUDENT TEST",
-    "email": "student1@gmail.com",
+    "password": "admintest1",
+    "username": "admintest1",
+    "name": "ADMIN TEST",
+    "email": "admin@gmail.com",
     "phoneNumber": "0123456789",
-    "role": "Học viên"
+    "role": "Quản trị viên"
 }
 
 ###
